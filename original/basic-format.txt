@@ -1,0 +1,145 @@
+
+Apple Integer BASIC, created by Apple co-founder Steve Wozniak, was first created as Apple I BASIC, for the Apple I hobbyist computer which was the first product of the newly-founded Apple company. On the Apple I, it had to be loaded from tape. When the Apple II came along the following year, it had a slightly improved version of this BASIC built into its ROM, called "Apple Integer BASIC" because it supported only integer numbers. Not long afterward, Applesoft Floating Point BASIC was licensed from Microsoft and made available to be loaded from tape or disk. Subsequent Apple models starting with the Apple II+ had Applesoft BASIC in ROM, so Integer BASIC went out of use.
+
+Integer BASIC programs were stored in a tokenized format, in files which were designated in Apple DOS directories as type "I".
+
+Unlike most other BASIC tokenizations which preserve literal printable ASCII characters in the 7-bit range and use high-bit (#128-#255) characters for tokens and other special functions (sometimes also using some of the ASCII control characters in #0-#31 for special functions as well), Integer BASIC tokenization instead stored normal ASCII characters with the high bit set, so that a letter A (ASCII 41 hex) was stored as C1 hex. Then the 7-bit characters with the high bit clear were used for tokens. Also, some of the control characters in the high-bit range (B0 - B9 hex) were used as flags to signal that the next two bytes were an integer constant (little-endian), except when the B0-B9 byte was preceded by an alphanumeric character (with high bit set), in which case it was considered part of a variable name.
+
+Program lines were separated with the byte 01. The null byte 00 was not used; this is something which might be noted as a way to distinguish Integer BASIC programs from S-C Assembler source files, also stored with file type "I", but which used nulls as line separators. (But note that both bytes 00 and 01 might appear as part of integer constants.)
+
+All BASIC keywords were assigned tokens, including command keywords which were only allowed in immediate mode on command lines, and couldn't actually appear in stored programs. Some keywords and symbols have multiple tokens for them, sometimes a large number of them; this appears to distinguish different contexts and meanings of the symbol for the assistance of the interpreter, but there doesn't seem to be any clear documentation of all of these distinctions. Some of them distinguish unary (one-argument) and binary (two-argument) versions of mathematical functions.
+
+The program file started with a two-byte little-endian integer giving the file length, and each line started with a one-byte line length (thus, lines could not exceed 255 tokenized bytes) and a two-byte little-endian integer for the line number.
+
+Tokens
+
+Blank values indicate either that the token is unused or is used for something unknown.
+Hex 	Dec 	Token meaning
+00 	0 	HIMEM: (direct cmd)
+01 	1 	
+02 	2 	_
+03 	3 	:
+04 	4 	LOAD
+05 	5 	SAVE
+06 	6 	CON
+07 	7 	RUN
+08 	8 	RUN
+09 	9 	DEL
+0A 	10 	,
+0B 	11 	NEW
+0C 	12 	CLR
+0D 	13 	AUTO
+0E 	14 	,
+0F 	15 	MAN
+10 	16 	HIMEM: (binary)
+11 	17 	LOMEM: (binary)
+12 	18 	+ (binary)
+13 	19 	- (binary)
+14 	20 	* (binary)
+15 	21 	/ (binary)
+16 	22 	= (binary)
+17 	23 	# (binary)
+18 	24 	>=
+19 	25 	>
+1A 	26 	<=
+1B 	27 	<>
+1C 	28 	<
+1D 	29 	AND
+1E 	30 	OR
+1F 	31 	MOD
+20 	32 	^
+21 	33 	+
+22 	34 	(
+23 	35 	,
+24 	36 	THEN
+25 	37 	THEN
+26 	38 	,
+27 	39 	,
+28 	40 	\
+29 	41 	\
+2A 	42 	(
+2B 	43 	!
+2C 	44 	!
+2D 	45 	(
+2E 	46 	PEEK
+2F 	47 	RND
+30 	48 	SGN
+31 	49 	ABS
+32 	50 	PDL
+33 	51 	RNDX
+34 	52 	(
+35 	53 	+ (unary)
+36 	54 	- (unary)
+37 	55 	NOT
+38 	56 	(
+39 	57 	= (unary)
+3A 	58 	# (unary)
+3B 	59 	LEN(
+3C 	60 	ASC(
+3D 	61 	SCRN(
+3E 	62 	,
+3F 	63 	(
+40 	64 	$
+41 	65 	$
+42 	66 	(
+43 	67 	,
+44 	68 	,
+45 	69 	;
+46 	70 	;
+47 	71 	;
+48 	72 	,
+49 	73 	,
+4A 	74 	,
+4B 	75 	TEXT
+4C 	76 	GR
+4D 	77 	CALL
+4E 	78 	DIM
+4F 	79 	DIM
+50 	80 	TAB
+51 	81 	END
+52 	82 	INPUT
+53 	83 	INPUT
+54 	84 	INPUT
+55 	85 	FOR
+56 	86 	=
+57 	87 	TO
+58 	88 	STEP
+59 	89 	NEXT
+5A 	90 	,
+5B 	91 	RETURN
+5C 	92 	GOSUB
+5D 	93 	REM
+5E 	94 	LET
+5F 	95 	GOTO
+60 	96 	IF
+61 	97 	PRINT
+62 	98 	PRINT
+63 	99 	PRINT
+64 	100 	POKE
+65 	101 	,
+66 	102 	COLOR=
+67 	103 	PLOT
+68 	104 	,
+69 	105 	HLIN
+6A 	106 	,
+6B 	107 	AT
+6C 	108 	VLIN
+6D 	109 	,
+6E 	110 	AT
+6F 	111 	VTAB
+70 	112 	=
+71 	113 	=
+72 	114 	)
+73 	115 	)
+74 	116 	LIST
+75 	117 	,
+76 	118 	LIST
+77 	119 	POP
+78 	120 	NODSP
+79 	121 	DSP
+7A 	122 	NOTRACE
+7B 	123 	DSP
+7C 	124 	DSP
+7D 	125 	TRACE
+7E 	126 	PR#
+7F 	127 	IN#
