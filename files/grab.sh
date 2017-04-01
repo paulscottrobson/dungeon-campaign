@@ -8,3 +8,5 @@ java -jar AppleCommander-1.3.5.jar -g dungeon-campaign.dsk DUNGEON >files/dungeo
 java -jar AppleCommander-1.3.5.jar -e dungeon-campaign.dsk HELLO >files/hello.bas
 java -jar AppleCommander-1.3.5.jar -e dungeon-campaign.dsk "DUNGEON CAMPAIGN" >files/dungeon-campaign.bas
 java -jar AppleCommander-1.3.5.jar -e dungeon-campaign.dsk DUNGEON >files/dungeon.bas
+
+cp files/dungeon.bin ../decode
