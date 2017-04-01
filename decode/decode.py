@@ -1,9 +1,11 @@
 #
 #	Dungeon Campaign (Apple ][ Integer Basic) decoder
 #
+import sys,re 
 
 class Decoder:
-	def __init__(self):
+	def __init__(self,varDefs):
+		self.variableDef = varDefs
 		# load binary add ending marker
 		self.binary = [x for x in open("dungeon.bin","rb").read(32768)]
 		self.binary.append(-1)
@@ -32,7 +34,7 @@ class Decoder:
 	#
 	def decodeLine(self,lineNumber,formatting):
 		line = self.analyse(lineNumber)
-		self.variableGotoGosubProcess(line)
+		self.variableGotoGosubProcess(line,lineNumber)
 		output = []
 		# for each line part
 		for l in line:
@@ -63,7 +65,7 @@ class Decoder:
 
 	def render(self,item):
 		if item[0] == 'T':
-			return " "+item[1]+" "
+			return " "+item[1][0].upper()+item[1][1:].lower()+" "
 		return item[1]
 
 	def replaceAll(self,s,f,r):
@@ -117,12 +119,12 @@ class Decoder:
 	#
 	#	process Variable Names and gotos.
 	#
-	def variableGotoGosubProcess(self,line):
+	def variableGotoGosubProcess(self,line,lineNumber):
 		for l in line:
 			for i in range(0,len(l)):
 				# convert variable names.
 				if l[i][0] == 'V':
-					newName = self.variableTranslate(l[i][1])
+					newName = self.variableTranslate(l[i][1],lineNumber)
 					if newName is not None:
 						l[i][1] = newName
 				# convert goto/gosub
@@ -135,16 +137,48 @@ class Decoder:
 	#
 	#	Translate variable name
 	#
-	def variableTranslate(self,variable):
-		return variable.upper()
+	def variableTranslate(self,variable,lineNumber):
+		vnew = self.variableDef.get(variable.lower(),lineNumber)
+		if vnew is None:
+			return None
+		if lineNumber < vnew["from"] or lineNumber > vnew["to"]:
+			return None
+		return vnew["full"]
 	#
 	#	Translate line number
 	#
 	def labelTranslate(self,lineNumber):
 		return "{"+str(lineNumber)+"}"
+#
+#	Class for looking up variable definitions
+#
+class VariableDefinitions:
+	def __init__(self,definitionFile):
+		vars = [x if x.find("#") < 0 else x[:x.find("#")] for x in open(definitionFile,"r").readlines()]
+		vars = [x.strip().replace("\t"," ") for x in vars if x.strip() != ""]
+		self.lookupVariable = {}
+		for v in vars:
+			 vm = re.match("^([A-Za-z0-9\\$\\()]+)\\s*\\{(.*)\\}\\s*([A-Za-z0-9\\$\\(]+)\\s*.*$",v)		
+			 assert vm is not None,"Bad line" + v
+			 newRect = { "short":vm.group(1).lower(), "from":0,"to":99999,"full":vm.group(3) }
+			 self.lookupVariable[newRect["short"]] = newRect
+			 if vm.group(2) != "":
+			 	rv = re.match("^(\\d+)\\-(\\d+)$",vm.group(2))
+			 	assert rv is not None,"Bad range"+v
+			 	newRect["from"] = int(rv.group(1))
+			 	newRect["to"] = int(rv.group(2))
 
+	def get(self,name,lineNumber):
+		name = name.lower()
+		if name not in self.lookupVariable:
+			return None
+		return self.lookupVariable[name]
 
-d = Decoder()
+vars = VariableDefinitions("variables.def")
+d = Decoder(vars)
 fmt = { "indent":0 }
+h = open("dungeon.lst","w")
 for l in d.lineNumbers:
-	print(d.decodeLine(l,fmt))
+	h.write(d.decodeLine(l,fmt)+"\n")
+h.close()
+
