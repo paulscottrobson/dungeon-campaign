@@ -6,4 +6,41 @@
 5   {delaytwosec} * Delay two seconds
 6   {delaysec} * Delay a second
 7   {delayhalfsec} * Delay half a second
+
+11 	{convertPosition} * Convert xPos,yPos to position in maze, contents and screen position
+12  {findEmptySlot} * Find an empty slot (upper digit is zero)
+13  {openSquareRoom} * Find a square which is the upper left of open four
+14  {} erase on the display
+15  {} on first two levels, make the first one a gas area (9x)
+16  {openSquareWalls} remove walls to make a square. move to one of the 4 squares randomly.
 769 {initialise} *_Initialise Game
+770 {} display title page (poke 50,63 is inverse poke 50,127 is normal)
+780 {} *install machine code.
+
+801 {createMaze} *_Create the maze
+802 {} *dimension 13x13x4 maze and fill with '3' (wall right and below)
+1001 {} *Do for each level.
+1003 {} Fill whole screen with the correct background colour (visuals only)
+1030 {} *Find the start position
+1035 {nextClear} * Clear the next square in the maze. When done set all non-open walls to -63
+
+1040 {clearOneSquare} * Clear a single square in the maze.
+1050 {} figure out which way we can go e.g. is there a wall there ?
+1080 {} if there is a used square near by, find a new starting point
+1110 {tryMoveDirection} dispatch to movers
+1130 {} try to move right
+1140 {} try to move down
+1150 {} try to move left
+1160 {} try to move up
+1170 {newStartPoint} * Find a new start point as we can't go any further.
+1200 {doRooms} * Create 5 square rooms. 3-5 have treasure in them (7x)
+1205 {} * Put pits (2x) necro/ptero (3x) monster/w treasure (8x) stairs (5x) monster no treasure (4x)
+1212 {} Pits, check there is something to fall through to.
+1215 {} No stairs on L1
+1220 {} One treasureless monster.
+1260 {} * Special stuff Level 4.
+
+
+# 0 nothing x1 wall right x2 wall below x3 wall right and below
+# 2x pit trap 3x necromancer/pterodactyl 4x monster (no treasure) 5x stairs 6x rock 7x treasure
+# 8x monster with treasure 9x gas , -ve if not displayed yet.

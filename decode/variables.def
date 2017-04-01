@@ -9,6 +9,8 @@ NUM {} 		partySize 											# number of people in your party
 STR {}		strength 											# party strength
 Q 	{} 		level												# Level (0-3)
 
+X 	{} 		xPos 												# Positions
+Y 	{} 		yPos
 
 M( 	{} 		maze( 												# Maze contents
 
@@ -20,4 +22,17 @@ C(	{2-9999} 		colours( 											# Colour codes
 
 # 1-4 walls level 1-4 5 player 6 pterodactyl 7 pit 8 monster 9 stairs 10 rock  11 treasure
 # 12 monsters w/treasure 13 gas 14 dragon 16 spectre
+
+GS 	{} 		gasTime 											# Gas exposure time remaining
+RT 	{} 		noGas 												# set to non-zero when not in gas.
+K 	{} 		mazeContents 										# Contents of current map square (map/10)
+HX 	{} 		xScreen 											# Screen positions
+HY 	{} 		yScreen
+Q1 	{} 		mazeIndex 											# Index into maze position
+C 	{} 		mazeClearCount 										# Count of maze slots to clear.
+R 	{} 		moveRight 											# can move right
+D 	{} 		moveDown
+L 	{} 		moveLeft
+U 	{} 		moveUp
+
 

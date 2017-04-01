@@ -122,7 +122,7 @@ class Decoder:
 				if self.binary[p] == 64:
 					variable = variable + "$"
 					p = p + 1
-				if self.binary[p] == 45:
+				if self.binary[p] == 45 or self.binary[p] == 52:
 					variable = variable + "("
 					p = p + 1
 				line[-1].append(['V',variable.lower()])
@@ -168,7 +168,9 @@ class Decoder:
 	def labelTranslate(self,lineNumber):
 		lvarl = self.commentSource.get(lineNumber)
 		if lvarl is not None:
-			return lvarl["label"][0].upper()+lvarl["label"][1:].lower()+"."+str(lineNumber)
+			if lvarl["label"] != "":
+				return lvarl["label"][0].upper()+lvarl["label"][1:].lower()+"."+str(lineNumber)
+		return None
 #
 #	Class for looking up variable definitions
 #
