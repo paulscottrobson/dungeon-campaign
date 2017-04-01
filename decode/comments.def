@@ -1,0 +1,9 @@
+#
+#	Comments file
+#
+
+1	{start} **__Dungeon Campaign by Robert Clardy. Reverse engineered by Paul Robson 2017
+5   {delaytwosec} * Delay two seconds
+6   {delaysec} * Delay a second
+7   {delayhalfsec} * Delay half a second
+769 {initialise} *_Initialise Game

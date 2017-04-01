@@ -4,8 +4,9 @@
 import sys,re 
 
 class Decoder:
-	def __init__(self,varDefs):
+	def __init__(self,varDefs,comSrc):
 		self.variableDef = varDefs
+		self.commentSource = comSrc
 		# load binary add ending marker
 		self.binary = [x for x in open("dungeon.bin","rb").read(32768)]
 		self.binary.append(-1)
@@ -36,6 +37,22 @@ class Decoder:
 		line = self.analyse(lineNumber)
 		self.variableGotoGosubProcess(line,lineNumber)
 		output = []
+		comment = self.commentSource.get(lineNumber)
+		if comment is not None:
+			#print(lineNumber,comment)
+			if comment["stars"]+comment["spaces"] > 0:
+				width = 90
+				for i in range(0,comment["stars"]):
+					output.append("# "+("*")*width)
+				for i in range(0,comment["spaces"]):
+					output.append("#")
+				output.append("#"+" "*int(width/2-len(comment["comment"])/2)+comment["comment"])
+				for i in range(0,comment["spaces"]):
+					output.append("#")
+				for i in range(0,comment["stars"]):
+					output.append("# "+("*")*width)
+			else:
+				output.append("#"+" "+comment["comment"])
 		# for each line part
 		for l in line:
 			# if next reduce by 1 plus 1 for each comma next i,j
@@ -45,7 +62,7 @@ class Decoder:
 					if c[0] == 'T' and c[1] == ',':
 						formatting["indent"] -= 1
 			# add indentation (| placeholder for space)
-			id = "||||||"+("||||" * formatting["indent"]) + ("".join([self.render(x) for x in l])).strip()
+			id = ("||||" * formatting["indent"]) + ("".join([self.render(x) for x in l])).strip()
 			# remove exces spacing
 			id = self.replaceAll(id,"  "," ")
 			id = self.replaceAll(id,"( ","(")
@@ -59,8 +76,9 @@ class Decoder:
 			# indent FOR
 			if l[0][0] == 'T' and l[0][1] == 'for':
 				formatting["indent"] += 1
-			# put line number in.
-			output[0] = "{0:4}".format(lineNumber)+output[0][4:]
+		output = ["      "+x for x in output]
+		# put line number in.
+		output[0] = "{0:4}".format(lineNumber)+output[0][4:]
 		return "\n".join(output)
 
 	def render(self,item):
@@ -148,7 +166,9 @@ class Decoder:
 	#	Translate line number
 	#
 	def labelTranslate(self,lineNumber):
-		return "{"+str(lineNumber)+"}"
+		lvarl = self.commentSource.get(lineNumber)
+		if lvarl is not None:
+			return lvarl["label"][0].upper()+lvarl["label"][1:].lower()+"."+str(lineNumber)
 #
 #	Class for looking up variable definitions
 #
@@ -173,12 +193,39 @@ class VariableDefinitions:
 		if name not in self.lookupVariable:
 			return None
 		return self.lookupVariable[name]
+#
+#	Class for line comments
+#
+class LineComments:
+	def __init__(self,definitionFile):
+		coms = [x if x.find("#") < 0 else x[:x.find("#")] for x in open(definitionFile,"r").readlines()]
+		coms = [x.strip().replace("\t"," ") for x in coms if x.strip() != ""]
+		self.comments = {}
+		for c in coms:
+			mc = re.match("^\\s*(\\d+)\\s*\\{(.*)\\}\\s*(.*)$",c)
+			assert mc is not None,"Bad comment line "+c
+			crec = { "comment":mc.group(3).strip(),"label":mc.group(2),"stars":0,"spaces":0 }
+			self.comments[int(mc.group(1))] = crec 
+			while crec["comment"][0] == '_' or crec["comment"][0] == '*':
+				crec["stars" if crec["comment"][0] == "*" else "spaces"] += 1
+				crec["comment"] = crec["comment"][1:].strip()
+			#print(self.comments)
+	#
+	#	Get comment/label for line.
+	#
+	def get(self,lineNumber):
+		if lineNumber not in self.comments:
+			return None
+		return self.comments[lineNumber]
 
 vars = VariableDefinitions("variables.def")
-d = Decoder(vars)
+linecomments = LineComments("comments.def")
+d = Decoder(vars,linecomments)
 fmt = { "indent":0 }
 h = open("dungeon.lst","w")
 for l in d.lineNumbers:
 	h.write(d.decodeLine(l,fmt)+"\n")
 h.close()
 
+# TODO: Label substitution
+# TODO: Decoding.

@@ -1,9 +1,27 @@
-   1  Goto {769}
-   5  For i = 1 To 1000
+   1  # ******************************************************************************************
+      # ******************************************************************************************
+      #
+      #
+      #        Dungeon Campaign by Robert Clardy. Reverse engineered by Paul Robson 2017
+      #
+      #
+      # ******************************************************************************************
+      # ******************************************************************************************
+      Goto Initialise.769
+   5  # ******************************************************************************************
+      #                                    Delay two seconds
+      # ******************************************************************************************
+      For i = 1 To 1000
       Next i
-   6  For i = 1 To 500
+   6  # ******************************************************************************************
+      #                                      Delay a second
+      # ******************************************************************************************
+      For i = 1 To 500
       Next i
-   7  For i = 1 To 500
+   7  # ******************************************************************************************
+      #                                   Delay half a second
+      # ******************************************************************************************
+      For i = 1 To 500
       Next i
       Return
   10  Vlin hy,hy + 1 At hx
@@ -16,17 +34,17 @@
       Return
   12  x = Rnd(11) + 2
       y = Rnd(11) + 2
-      Gosub {11}
-      If k # 0 Then {12}
+      Gosub 11
+      If k # 0 Then 12
       Return
-  13  Gosub {12}
-      If maze(q1 + 1) < - 5 Or maze(q1 + 13) < - 5 Or maze(q1 + 14) < - 5 Then {13}
+  13  Gosub 12
+      If maze(q1 + 1) < - 5 Or maze(q1 + 13) < - 5 Or maze(q1 + 14) < - 5 Then 13
       maze(q1) = 0
   14  Color= 0
       For j = 0 To 4
           Vlin hy,hy + 4 At hx + j
       Next j
-  15  If(level # 1 And level # 2) Or i # 1 Then {16}
+  15  If(level # 1 And level # 2) Or i # 1 Then 16
       For j = 0 To 1
           For k = 0 To 1
               maze(q1 + j + 13 * k) = maze(q1 + j + 13 * k) - 90
@@ -36,33 +54,33 @@
       q1 = q1 + Rnd(2) + 13 *(Rnd(2))
       Return
   18  v = Peek(- 16384)
-      If v < 128 Then {20}
+      If v < 128 Then 20
       Poke - 16368,0
       rt = 1
       Return
-  20  If rt = 1 And nd # 3 Then {18}
-      If nd = 3 Then Gosub {40}
+  20  If rt = 1 And nd # 3 Then 18
+      If nd = 3 Then Gosub 40
       cr = cr + 1
-      If(cr Mod(5 + 15 *(nd # 3))) # 0 Or rt = 1 Then {18}
+      If(cr Mod(5 + 15 *(nd # 3))) # 0 Or rt = 1 Then 18
   25  Tab 35
       gs = gs -(gs > 0)
       Print gs;
-      If gs # 0 Or((cr Mod(10 + 30 *(nd # 3))) # 0) Then {18}
+      If gs # 0 Or((cr Mod(10 + 30 *(nd # 3))) # 0) Then 18
   30  partySize = partySize - 1
       Print
       Print " one of your party died from the gas.";
-      Gosub {5}
-      If partySize <= 0 Then {8325}
+      Gosub Delaytwosec.5
+      If partySize <= 0 Then 8325
       Pop
-      Goto {1500}
+      Goto 1500
   40  m = 1
       i = Rnd(2)
       sx = sx(1) + qx * i
       sy = sy(1) + qy *(i = 0)
-  41  If sx < 1 Or sy < 1 Or sx > 38 Or sy > 38 Then {60}
+  41  If sx < 1 Or sy < 1 Or sx > 38 Or sy > 38 Then 60
   42  n = Scrn(sx,sy)
-      If n = colours(5) Then {50}
-      If n = colours(level + 1) Mod 16 Or n = colours(9) Then {60}
+      If n = colours(5) Then 50
+      If n = colours(level + 1) Mod 16 Or n = colours(9) Then 60
       m = 1
       u = Scrn(sx(8),sy(8))
       Color= u +(8 *(u # 0))
@@ -79,15 +97,15 @@
       qy =(sy = 1) -(sy = 38)
       If qx = 0 Then qx = 2 * Rnd(2) - 1
       If qy = 0 Then qy = 2 * Rnd(2) - 1
-      Goto {40}
+      Goto 40
   50  Color= 8
       Plot sx,sy
-      Gosub {6}
+      Gosub Delaysec.6
       Call - 936
       Print
       Print " the serpent ate one of your party!"
       Color= 0
-      Gosub {7}
+      Gosub Delayhalfsec.7
   55  Plot sx,sy
       For i = 1 To 8
           Plot sx(i),sy(i)
@@ -96,20 +114,20 @@
       nd = 0
       partySize = partySize - 1
       Pop
-      Goto {3750}
-  60  If m = 0 Then {47}
+      Goto 3750
+  60  If m = 0 Then 47
       sx = sx - qx * i + qx *(i = 0)
       sy = sy - qy *(i = 0) + qy * i
       m = 0
-      Goto {41}
+      Goto 41
  500  d = 0
       u = 625
-      Gosub {600}
+      Gosub 600
       u = 620
       qx = qx + Sgn(hx - qx) -(hy = qy)
       qy = qy + Sgn(hy - qy) -(hx = qx)
-      Gosub {600}
-      If d = 1 Then {700}
+      Gosub 600
+      If d = 1 Then 700
       dc = 0
       Return
  600  For i = - 1 To 2
@@ -139,36 +157,41 @@
       Print "the spectre got one of your party!"
       nd = 0
  705  u = 620
-      Gosub {600}
+      Gosub 600
       Color= colours(5)
       If Scrn(qx,qy) = colours(16) Then Plot qx,qy
       Color= colours(16)
       If Scrn(qx + 1,qy) = colours(5) Then Plot qx + 1,qy
       u = 625
-      Gosub {600}
+      Gosub 600
  707  qx = qx - 1
-      If qx > 1 Then {705}
+      If qx > 1 Then 705
       Plot qx + 1,qy
       partySize = partySize - 1
       Pop
-      Goto {3750}
- 769  Rem
+      Goto 3750
+ 769  # ******************************************************************************************
+      #
+      #                                     Initialise Game
+      #
+      # ******************************************************************************************
+      Rem
  770  Poke 50,63
-      Gosub {5}
+      Gosub Delaytwosec.5
       Vtab 21
       Tab 17
       Print " by "
       Print
       Tab 14
       Print "robert clardy"
-      Gosub {5}
+      Gosub Delaytwosec.5
  777  Vtab 21
       Tab 11
       Print "copyright(c) 1979"
       Print
       Tab 9
       Print "by synergistic software"
-      Gosub {6}
+      Gosub Delaysec.6
       Poke 50,255
  780  Poke 2,173
       Poke 3,48
@@ -214,7 +237,7 @@
       colours(13) = 14
       colours(14) = 5
       colours(16) = 10
-      Goto {801}
+      Goto 801
  801  Rem
  802  Dim m(676)
       For i = 1 To 676
@@ -231,23 +254,23 @@
               Vlin 0,39 At i
           Next i
           Color= 0
-          Gosub {12}
+          Gosub 12
           c = 121
-1030      Gosub {12}
-          If maze(q1) < 0 Then {1030}
+1030      Gosub 12
+          If maze(q1) < 0 Then 1030
           c = 121
-1035      If c # 1 Then {1040}
+1035      If c # 1 Then 1040
           Color= colours(level + 1)
           For q1 = level * 169 + 1 To(level + 1) * 169
               If maze(q1) > 0 Then maze(q1) = - 63
 1036      Next q1
-          Goto {1200}
+          Goto 1200
 1040      r = 0
           d = 0
           l = 0
           u = 0
-          Gosub {11}
-          Gosub {10}
+          Gosub 11
+          Gosub 10
           maze(q1) = - Abs(maze(q1))
           c = c - 1
 1050      If x # 13 Then r = maze(q1 + 1) > 0
@@ -255,36 +278,36 @@
           If x # 1 Then l = maze(q1 - 1) > 0
           If y # 1 Then u = maze(q1 - 13) > 0
 1080      k = r + d + l + u
-          If(k < 3 And Rnd(10) < 2) Or k = 0 Then {1170}
-1110      Goto {1130} + 10 * Rnd(4)
-1130      If Not r Then {1110}
+          If(k < 3 And Rnd(10) < 2) Or k = 0 Then 1170
+1110      Goto 1130 + 10 * Rnd(4)
+1130      If Not r Then 1110
           maze(q1) = maze(q1) + 1
           x = x + 1
           Vlin 3 * y - 2,3 * y - 1 At 3 *(x - 1)
-          Goto {1035}
-1140      If Not d Then {1110}
+          Goto 1035
+1140      If Not d Then 1110
           maze(q1) = maze(q1) + 2
           y = y + 1
           Hlin 3 * x - 2,3 * x - 1 At 3 *(y - 1)
-          Goto {1035}
-1150      If Not l Then {1110}
+          Goto 1035
+1150      If Not l Then 1110
           maze(q1 - 1) = maze(q1 - 1) - 1
           x = x - 1
           Vlin 3 * y - 2,3 * y - 1 At 3 * x
-          Goto {1035}
-1160      If Not u Then {1110}
+          Goto 1035
+1160      If Not u Then 1110
           maze(q1 - 13) = maze(q1 - 13) - 2
           y = y - 1
           Hlin 3 * x - 2,3 * x - 1 At 3 * y
-          Goto {1035}
+          Goto 1035
 1170      x = Rnd(13) + 1
           y = Rnd(13) + 1
-          Gosub {11}
-          If maze(q1) > 0 Then {1170}
+          Gosub 11
+          If maze(q1) > 0 Then 1170
           c = c + 1
-          Goto {1035}
+          Goto 1035
 1200      For i = 1 To 5
-              Gosub {13}
+              Gosub 13
               If i > 2 Then maze(q1) = maze(q1) - 70
           Next i
           Poke 0,4
@@ -294,49 +317,49 @@
 1205  Rem
 1210  For level = 0 To 3
           For i = 1 To 2
-1212          Gosub {12}
-              If maze(q1 + 169 *(level < 3)) / 10 = - 6 Or maze(q1 + 338 *(level < 2)) / 10 = - 6 Then {1212}
+1212          Gosub 12
+              If maze(q1 + 169 *(level < 3)) / 10 = - 6 Or maze(q1 + 338 *(level < 2)) / 10 = - 6 Then 1212
               maze(q1) = maze(q1) - 20
-              Gosub {12}
+              Gosub 12
               maze(q1) = maze(q1) - 30
-              Gosub {12}
+              Gosub 12
               maze(q1) = maze(q1) - 80
 1215      Next i
           For i = 1 To 3
-              If level = 0 Then {1220}
-              Gosub {12}
-              If maze(q1 - 169) < - 5 Then {1215}
+              If level = 0 Then 1220
+              Gosub 12
+              If maze(q1 - 169) < - 5 Then 1215
               maze(q1) = maze(q1) - 50
 1220      Next i
-          Gosub {12}
+          Gosub 12
           maze(q1) = maze(q1) - 40
       Next level
       level = 3
-1260  Gosub {12}
+1260  Gosub 12
       i = Rnd(2)
       j = Rnd(2)
       If i Then x = j * 13
       If Not i Then y = j * 13
-      Gosub {11}
-      If Abs(maze(q1) / 10) # 0 Then {1260}
+      Gosub 11
+      If Abs(maze(q1) / 10) # 0 Then 1260
       wx = x
       wy = y
       level = 0
-      Gosub {12}
+      Gosub 12
 1265  Gr
       Color= colours(5)
-      Gosub {10}
+      Gosub 10
       Color= colours(1)
       Hlin 0,39 At 0
       Hlin 0,39 At 39
       Vlin 0,39 At 0
       Vlin 0,39 At 39
-      Gosub {4010}
+      Gosub 4010
 1280  Dim a$(15),b$(250),c$(5)
 1290  b$ = "lycanthropesgargoyles balrogs vampires goblins mighty ogresvicious orcscyclopses skeletons "
 1292  b$(109) = "zombies evil trolls mummies huge spiderswerewolves minotaurs centaurs berserkers griffons "
 1294  b$(217) = "basilisks gorgons "
-1300  Goto {1560}
+1300  Goto 1560
 1500  Call - 936
       Print
       Tab 10
@@ -344,22 +367,22 @@
       Tab 5
       rt =((maze(q1) / 10) # 9)
       If rt = 0 Then Print "gas exposure time remaining = ";gs;
-1501  Gosub {18}
-      If invisible = 15 Then {1520}
-      If nd = 0 Then Gosub {4250}
-      If nd = 2 Then Gosub {500}
-      If dc > 0 Then Gosub {7000}
-1520  If v = 210 Then {2000}
-      If v = 204 Then {2500}
-      If v = 213 Then {3000}
-      If v = 196 Then {3500}
-      If hasCarpet And v = 198 Then {3755}
-1530  If v = 211 Then {4310}
-      If v = 195 Then {8300}
-      If v = 202 Then {3700}
-      If v = 197 Then {6000}
-      If v = 216 Then {3740}
-      If invisible > 1 And v = 201 Then {3900}
+1501  Gosub 18
+      If invisible = 15 Then 1520
+      If nd = 0 Then Gosub 4250
+      If nd = 2 Then Gosub 500
+      If dc > 0 Then Gosub 7000
+1520  If v = 210 Then 2000
+      If v = 204 Then 2500
+      If v = 213 Then 3000
+      If v = 196 Then 3500
+      If hasCarpet And v = 198 Then 3755
+1530  If v = 211 Then 4310
+      If v = 195 Then 8300
+      If v = 202 Then 3700
+      If v = 197 Then 6000
+      If v = 216 Then 3740
+      If invisible > 1 And v = 201 Then 3900
 1560  Poke 50,63
       Print
       Print " legal commands are: ";
@@ -372,101 +395,101 @@
       Print "l=left u=up e=exit"
 1570  Print "r=right s=search j=jump"
       Print "d=down x=status c=colors";
-      Goto {1501}
-2000  If maze(q1) Mod 2 # 0 Then {5000}
+      Goto 1501
+2000  If maze(q1) Mod 2 # 0 Then 5000
       dx = 1
       dy = 0
-2020  If dwarfDead Then Gosub {4000}
+2020  If dwarfDead Then Gosub 4000
       For i = 1 To 3
           Color=(colours(13)) *((maze(q1) / 10) = 9)
-          Gosub {10}
+          Gosub 10
           Color= invisible + colours(5)
           hx = hx + dx
           hy = hy + dy
-          Gosub {10}
+          Gosub 10
       Next i
       x = x + dx
       y = y + dy
-2100  Gosub {11}
-      If k # - 9 Then {2120}
+2100  Gosub 11
+      If k # - 9 Then 2120
       i = x
       j = y
       x = x - 1
       y = y - 1
-2102  Gosub {11}
-      If k = - 9 Then {2105}
+2102  Gosub 11
+      If k = - 9 Then 2105
       x = x + 1
-      If x = i Then {2102}
+      If x = i Then 2102
       y = y + 1
       x = x - 2
-      Goto {2102}
+      Goto 2102
 2105  Color= colours(13)
       For u = 0 To 4
           Vlin hy,hy + 4 At hx + u
       Next u
-      Gosub {4005}
+      Gosub 4005
       x = x + 1
-      Gosub {4005}
+      Gosub 4005
       y = y + 1
-      Gosub {4005}
+      Gosub 4005
       x = x - 1
-      Gosub {4005}
+      Gosub 4005
       x = i
       y = j
-2110  Gosub {11}
+2110  Gosub 11
       Color= invisible + colours(5)
-      Gosub {10}
-2120  Gosub {4005}
+      Gosub 10
+2120  Gosub 4005
       If nd = 1 Then dc = dc + 1
-      If mp # 0 Then {4550}
-      If Not v1 Then {2130}
+      If mp # 0 Then 4550
+      If Not v1 Then 2130
       v1 = 0
-      Goto {1520}
+      Goto 1520
 2130  j = 1
       k = Abs(k)
-      If level # 0 And k = 5 Then {4110}
+      If level # 0 And k = 5 Then 4110
       j = 0
-      If level # 3 Then If Abs(maze(q1 + 169) / 10) = 5 Then {4110}
-2145  If elfDead Or(level = 0 And y = 1) Or(level = 3 And y = 13) Then {2170}
+      If level # 3 Then If Abs(maze(q1 + 169) / 10) = 5 Then 4110
+2145  If elfDead Or(level = 0 And y = 1) Or(level = 3 And y = 13) Then 2170
 2150  For d = - 1 To 1 Step 2
           For u = 1 To 13 Step 12
               i = Abs(maze(q1 + d * u) / 10)
-              If i = 2 Or i = 3 Then {2160}
+              If i = 2 Or i = 3 Then 2160
       Next u,d
-      Goto {2170}
+      Goto 2170
 2160  Poke 50,127
       Call - 936
       Print
       Tab 10
       Print "beware! danger near!"
       Poke 50,255
-      Gosub {7}
-2170  If k = 4 Or k = 8 Then {4510}
-      If nd = 1 And invisible # 15 And x = sx And y = sy Then {8000}
-      If k = 3 Then {4800}
-      If k = 2 Then {4910}
-      Goto {1500}
-2500  If x = 1 Then {5000}
-      If maze(q1 - 1) Mod 2 # 0 Then {5000}
+      Gosub Delayhalfsec.7
+2170  If k = 4 Or k = 8 Then 4510
+      If nd = 1 And invisible # 15 And x = sx And y = sy Then 8000
+      If k = 3 Then 4800
+      If k = 2 Then 4910
+      Goto 1500
+2500  If x = 1 Then 5000
+      If maze(q1 - 1) Mod 2 # 0 Then 5000
       dx = - 1
       dy = 0
-      Goto {2020}
-3000  If y = 1 Then {5000}
-      If(Abs(maze(q1 - 13) Mod 10)) > 1 Then {5000}
+      Goto 2020
+3000  If y = 1 Then 5000
+      If(Abs(maze(q1 - 13) Mod 10)) > 1 Then 5000
       dx = 0
       dy = - 1
-      Goto {2020}
-3500  If(Abs(maze(q1) Mod 10)) > 1 Then {5000}
+      Goto 2020
+3500  If(Abs(maze(q1) Mod 10)) > 1 Then 5000
       dx = 0
       dy = 1
-      Goto {2020}
+      Goto 2020
 3700  v1 = 1
       Call - 936
       Print
       Tab 15
       Print "direction?"
-      Gosub {18}
-      Goto {1520}
+      Gosub 18
+      Goto 1520
 3740  Call - 936
       c$ = "alive"
       If elfDead Then c$ = "dead"
@@ -477,15 +500,15 @@
 3750  Print "your party now numbers ";partySize
       Print "total strength = ";partySize * strength
 3751  Print "your treasure is worth ";s;" quadroons.";
-      Goto {1501}
+      Goto 1501
 3755  bx = 2 * Rnd(2) - 1
       by = 2 * Rnd(2) - 1
 3760  i = Rnd(2)
       dx = bx *(i = 0)
       dy = by * i
-3765  If(x = 13 And dx = 1) Or(y = 13 And dy = 1) Or(x = 1 And dx = - 1) Or(y = 1 And dy = - 1) Then {3755}
-      If(Abs(maze(q1 + dx + 13 * dy)) / 10) = 6 Then {3755}
-3770  If i Then {3780}
+3765  If(x = 13 And dx = 1) Or(y = 13 And dy = 1) Or(x = 1 And dx = - 1) Or(y = 1 And dy = - 1) Then 3755
+      If(Abs(maze(q1 + dx + 13 * dy)) / 10) = 6 Then 3755
+3770  If i Then 3780
       For i = 1 To 3
           Color= Scrn(hx + dx +(dx = 1),hy) + colours(5)
           Vlin hy,hy + 1 At hx + dx +(dx = 1)
@@ -494,13 +517,13 @@
           hx = hx + dx
       Next i
       x = x + dx
-3775  Gosub {11}
-      Gosub {4005}
-      If Peek(- 16384) < 128 Then {3760}
+3775  Gosub 11
+      Gosub 4005
+      If Peek(- 16384) < 128 Then 3760
       Poke - 16368,0
       hasCarpet = 0
-      If mp Then {4555}
-      Goto {2130}
+      If mp Then 4555
+      Goto 2130
 3780  For i = 1 To 3
           Color= Scrn(hx,hy + dy +(dy = 1)) + colours(5)
           Hlin hx,hx + 1 At hy + dy +(dy = 1)
@@ -509,22 +532,22 @@
           hy = hy + dy
       Next i
       y = y + dy
-      Goto {3775}
+      Goto 3775
 3900  invisible = 15 *(invisible = 16)
       Color= invisible + colours(5)
-      Gosub {10}
-      Goto {5050}
+      Gosub 10
+      Goto 5050
 4000  Color= colours(level + 1) *(colours(level + 1) > 16)
-      Goto {4010}
+      Goto 4010
 4002  maze(q1) = - Abs(maze(q1))
-      Goto {4010}
+      Goto 4010
 4005  Color= colours(level + 1)
-      Gosub {11}
+      Gosub 11
 4010  p = maze(q1)
       If p > 0 And k # 5 Then Return
       If dwarfDead = 0 Then maze(q1) = Abs(p) + 10 *(p = 0)
-      If x > 12 Then {4020}
-      If maze(q1 + 1) > 0 And rt Then {4020}
+      If x > 12 Then 4020
+      If maze(q1 + 1) > 0 And rt Then 4020
 4015  If p Mod 2 # 0 Then Vlin 3 *(y - 1),3 * y At 3 * x
 4020  If x > 1 Then If maze(q1 - 1) Mod 2 = - 1 Then Vlin 3 *(y - 1),3 * y At 3 *(x - 1)
 4030  If y > 1 Then If(maze(q1 - 13) Mod 10) < - 1 Then Hlin 3 *(x - 1),3 * x At 3 *(y - 1)
@@ -535,7 +558,7 @@
 4110  Color= colours(9)
       i = Sgn(maze(q1))
       rt = 0
-      Gosub {4002}
+      Gosub 4002
       If i > 0 Then maze(q1) = Abs(maze(q1))
       rt = 1
       a$ = "down"
@@ -546,8 +569,8 @@
       Print
       Tab 7
       Print "stairway. go ";a$;" it(y/n)?"
-4130  Gosub {18}
-      If v # 217 Then {2145}
+4130  Gosub 18
+      If v # 217 Then 2145
       level = level - j +(j = 0)
       For i = j * 8 + 8 To(j = 0) * 8 + 8 Step((j = 0) - j)
           Poke 0,i
@@ -555,13 +578,13 @@
           Call 2
 4145      For k = 1 To 70
       Next k,i
-      Gosub {11}
+      Gosub 11
       Call - 936
-      Gosub {4150}
-      Goto {2130}
+      Gosub 4150
+      Goto 2130
 4150  Gr
       Color= colours(5)
-      Gosub {10}
+      Gosub 10
       mp = 0
       rt = 0
       nd = 0
@@ -573,39 +596,39 @@
       Vlin 0,39 At 39
       Hlin 0,39 At 0
       Hlin 0,39 At 39
-      If colours(level + 1) > 15 Then {4420}
+      If colours(level + 1) > 15 Then 4420
 4170  j = x
       u = y
       For x = 1 To 13
           For y = 1 To 13
-              Gosub {11}
-              If maze(q1) <= 0 Then {4190}
+              Gosub 11
+              If maze(q1) <= 0 Then 4190
               Color= colours(level + 1)
-              Gosub {4002}
+              Gosub 4002
               maze(q1) = Abs(maze(q1))
 4180          If level # 3 Then If(maze(q1 + 169) / 10) = 5 Then k = 5
               Color= colours(k + 4)
               If k = 6 Then Color= colours(level + 1)
-              If k = 5 Then Gosub {4002}
-              If k # 5 And k > 1 Then Gosub {10}
+              If k = 5 Then Gosub 4002
+              If k # 5 And k > 1 Then Gosub 10
 4190  Next y,x
       rt = 1
       x = j
       y = u
-      Gosub {4005}
+      Gosub 4005
 4220  Color= 0
       If level = 3 And(wy = 0 Or wy = 13) Then Hlin 3 * wx - 2,3 * wx - 1 At 3 * wy
       If level = 3 And(wx = 0 Or wx = 13) Then Vlin 3 * wy - 2,3 * wy - 1 At 3 * wx
       Return
 4250  dc = 0
       If Rnd(30) > 0 Then Return
-      If level < 2 Then {4260}
-      If level = 2 Then {4256}
+      If level < 2 Then 4260
+      If level = 2 Then 4256
       nd = 2
       u = 620
       qx = 36
       qy = 36
-      Gosub {600}
+      Gosub 600
       Poke 50,63
       Call - 936
       For i = 1 To 83
@@ -616,12 +639,12 @@
           Print " ";
       Next i
       Poke 50,255
-      Goto {4259}
+      Goto 4259
 4256  u = x
       d = y
       qx = 1
       qy = 1
-      Gosub {12}
+      Gosub 12
       nd = 3
       Color= 8
       Plot hx,hy
@@ -631,7 +654,7 @@
 4257      dy = 0
           dx = Rnd(3) - 1
           If dx = 0 Then dy = 2 * Rnd(2) - 1
-          If Scrn(sx(i) + dx,sy(i) + dy) = colours(level + 1) Mod 16 Then {4257}
+          If Scrn(sx(i) + dx,sy(i) + dy) = colours(level + 1) Mod 16 Then 4257
           sx(i - 1) = sx(i) + dx
 4258      sy(i - 1) = sy(i) + dy
           Plot sx(i - 1),sy(i - 1)
@@ -642,23 +665,23 @@
       Print "a giant serpent has entered the dungeon!"
       x = u
       y = d
-4259  Gosub {6}
-      Gosub {11}
+4259  Gosub Delaysec.6
+      Gosub 11
       Return
 4260  nd = 1
       qx = x
       qy = y
-4265  Gosub {12}
-      If Abs(x - qx) + Abs(y - qy) < 6 Then {4265}
+4265  Gosub 12
+      If Abs(x - qx) + Abs(y - qy) < 6 Then 4265
       Color= colours(14)
-      Gosub {10}
+      Gosub 10
       sx = x
       sy = y
       x = qx
       y = qy
       qx = hx
       qy = hy
-      Gosub {11}
+      Gosub 11
 4267  Call - 936
       Print
       Poke 50,127
@@ -670,18 +693,18 @@
           d = Peek(- 16336)
           For j = 1 To 3
       Next j,i
-      Goto {4259}
-4310  Gosub {11}
-      If k = 7 Or k = 8 Then {4325}
+      Goto 4259
+4310  Gosub 11
+      If k = 7 Or k = 8 Then 4325
       Call - 936
       Print
       Tab 10
       Print "sorry, no treasure here.";
-      Goto {1501}
+      Goto 1501
 4325  For j = 1 To 8
           d = j Mod 2
           Color= colours(5 + 6 * d)
-          Gosub {10}
+          Gosub 10
           For l = 1 To 50
           Next l
           Poke 0,8 - d
@@ -694,71 +717,71 @@
       Call - 936
       Print "you've found ";l;" quadroons worth of"
       Print "gold and jewels.";
-      If Rnd(2) Then {1501}
+      If Rnd(2) Then 1501
 4335  Print " you've also found "
-      Goto {4370} + 10 * Rnd(8)
+      Goto 4370 + 10 * Rnd(8)
 4345  i = x
       j = y
       For x = 1 To 13
           For y = 1 To 13
-              Gosub {11}
+              Gosub 11
               k = Abs(k)
-              If k # u And k # d Then {4346}
+              If k # u And k # d Then 4346
               Color= colours(u + 4)
-              Gosub {10}
-              Gosub {4005}
+              Gosub 10
+              Gosub 4005
 4346  Next y,x
-      Goto {5045}
+      Goto 5045
 4370  Color= colours(9)
       i = x
       j = y
       For x = 1 To 13
           For y = 1 To 13
-              Gosub {11}
-              If level # 0 And Abs(k) = 5 Then Gosub {4010}
-4375          If level = 3 Then {4377}
+              Gosub 11
+              If level # 0 And Abs(k) = 5 Then Gosub 4010
+4375          If level = 3 Then 4377
               k = Abs(maze(q1 + 169) / 10)
-              If k # 5 Then {4377}
-              Gosub {4010}
+              If k # 5 Then 4377
+              Gosub 4010
               maze(q1 + 169) = Abs(maze(q1 + 169))
 4377  Next y,x
-      Goto {5045}
+      Goto 5045
 4380  u = 7
       d = 8
-      Goto {4345}
+      Goto 4345
 4390  u = 4
       d = 8
-      Goto {4345}
+      Goto 4345
 4400  u = 2
       d = 3
-      Goto {4345}
+      Goto 4345
 4410  wp = 1
       Print "a magic sword(can be used only once).";
-      Goto {5050}
+      Goto 5050
 4420  i = x
       j = y
       colours(level + 1) = colours(level + 1) + 16
       For x = 1 To 13
           For y = 1 To 13
-              Gosub {11}
+              Gosub 11
               d =(k >= 0) -(k < 0)
-              Gosub {4005}
-              If Abs(k) = 6 Then Gosub {10}
+              Gosub 4005
+              If Abs(k) = 6 Then Gosub 10
               maze(q1) = d * maze(q1)
 4425  Next y,x
-      Goto {5045}
+      Goto 5045
 4430  Print "a magic carpet."
       hasCarpet = 1
-      Goto {5050}
+      Goto 5050
 4440  Print "an invisibility potion!";
       invisible = 16
-      Goto {5050}
+      Goto 5050
 4510  hx = hx - 3 * dx
       hy = hy - 3 * dy
       mx = hx
       my = hy
       Color= colours(8)
-      Gosub {10}
+      Gosub 10
       mp = 1
       tx = x
       ty = y
@@ -767,44 +790,44 @@
       a$ = b$(i,i + 11)
       Call - 936
       Print "you've come upon ";Rnd(19) + 5;" ";a$
-4522  Gosub {11}
+4522  Gosub 11
       Print "their strength is ";mstr;" while yours"
       Print "is ";partySize * strength;". what is your command?"
-      Goto {1501}
-4550  If hx = mx And hy = my And invisible # 15 Then {4710}
-      If(hx = mx Or hy = my) And invisible # 15 Then {4560}
+      Goto 1501
+4550  If hx = mx And hy = my And invisible # 15 Then 4710
+      If(hx = mx Or hy = my) And invisible # 15 Then 4560
 4555  Color= colours(8)
       hx = 3 * tx - 2
       hy = 3 * ty - 2
-      Gosub {10}
+      Gosub 10
       Color= 0
       hx = mx
       hy = my
-      Gosub {10}
-      Gosub {11}
+      Gosub 10
+      Gosub 11
       mp = 0
-      Goto {2130}
+      Goto 2130
 4560  hx = mx
       hy = my
       For i = 1 To 6
           Color= 0
-          Gosub {10}
+          Gosub 10
           Color= colours(8)
           hx = hx + dx
           hy = hy + dy
-          Gosub {10}
+          Gosub 10
       Next i
-      Gosub {11}
-      Goto {4710}
+      Gosub 11
+      Goto 4710
 4710  For i = 1 To 6
           Poke 0,20
           Poke 24,2
           Color= colours(8)
-          Gosub {10}
+          Gosub 10
           For l = 1 To 100
           Next l
           Color= colours(5)
-          Gosub {10}
+          Gosub 10
           Call 2
       Next i
       i = level * 169 + tx + 13 *(ty - 1)
@@ -812,21 +835,21 @@
       Color= colours(8)
       Plot hx + 1,hy
       Plot hx,hy + 1
-      If wp = 0 Then {4713}
+      If wp = 0 Then 4713
       Call - 936
       Print
       Tab 6
 4712  Print "use your magic sword(y/n)?";
-      Gosub {18}
-      If v = 217 Then {4750}
+      Gosub 18
+      If v = 217 Then 4750
 4713  Call - 936
       Print "battle has begun. hit space bar to roll dice for your attack. hit it again to stop dice.";
       k = 0
       j = 0
-      Gosub {18}
+      Gosub 18
 4716  i = Rnd(10) + 1
       Print i
-      If Peek(- 16384) < 128 Then {4716}
+      If Peek(- 16384) < 128 Then 4716
       l =(partySize * strength * i) > mstr * 3
       Poke - 16368,0
 4718  Print "you rolled ";i;"."
@@ -834,55 +857,55 @@
       If Not l Then Print "no hit."
       j = j + l
 4719  Print "now roll for the enemy.";
-      Gosub {18}
+      Gosub 18
 4721  i = Rnd(10) + 1
       Print i
-      If Peek(- 16384) < 128 Then {4721}
+      If Peek(- 16384) < 128 Then 4721
       Poke - 16368,0
       k = k +(i > 7)
 4722  Print
       Print "the enemy gets a ";i
       Print "you've lost ";k;" of your party."
-      Gosub {6}
-4723  If k >= partySize Then {8325}
-      If j = 2 Then {4730}
+      Gosub Delaysec.6
+4723  If k >= partySize Then 8325
+      If j = 2 Then 4730
       c$ = "none"
       If j Then c$ = "half"
       Print c$;" of the ";a$;" are dead."
 4724  If k > 3 Then mstr = mstr / 2
 4725  Print "roll again for your side.";
-      Gosub {18}
-      Goto {4716}
+      Gosub 18
+      Goto 4716
 4730  partySize = partySize - k
       strength = strength + 1
-      If k And level And Not elfDead And Rnd(15) > partySize Then {4740}
-      If k And level = 2 And Not dwarfDead And Rnd(15) > partySize Then {4741}
+      If k And level And Not elfDead And Rnd(15) > partySize Then 4740
+      If k And level = 2 And Not dwarfDead And Rnd(15) > partySize Then 4741
 4731  Print
       Print "the ";a$;" were all killed."
       mp = 0
-      Goto {3750}
+      Goto 3750
 4740  elfDead = 1
       Print
       Print "the elf was killed. no more warnings."
-      Gosub {5}
-      Goto {4731}
+      Gosub Delaytwosec.5
+      Goto 4731
 4741  dwarfDead = 1
       Print
       Print "the dwarf was killed. no more map."
-      Gosub {5}
-      Goto {4731}
+      Gosub Delaytwosec.5
+      Goto 4731
 4750  wp = 0
       strength = strength + mstr / partySize
       Print
       Print "the magic sword killed the ";a$
       Color= colours(5)
-      Gosub {10}
+      Gosub 10
       mp = 0
-      Goto {3750}
+      Goto 3750
 4800  Call - 936
-      If Rnd(2) Then {4801}
+      If Rnd(2) Then 4801
       Print "you disturbed an evil necromancer who sent you here."
-      Goto {4802}
+      Goto 4802
 4801  Print "you were grabbed by pteridactyls, flown here and left."
 4802  i = 20
       For j = 1 To 15
@@ -895,9 +918,9 @@
       Poke 24,2
       Call 2
 4805  level = Rnd(3)
-      Gosub {12}
-      Gosub {4150}
-      Goto {2130}
+      Gosub 12
+      Gosub 4150
+      Goto 2130
 4910  Call - 936
       Print
       Poke 50,127
@@ -906,34 +929,34 @@
       Poke 50,255
       For i = 1 To 4
           Color= 1 +(i Mod 2) * 10
-          Gosub {10}
+          Gosub 10
           For j = 1 To 6
               Poke 0,12
               Poke 24,2
 4920          Call 2
       Next j,i
-      If level = 3 Then {4950}
+      If level = 3 Then 4950
       level = level + Rnd(2) + 1
       If level > 3 Then level = 3
       Tab 8
       Print "you've fallen to level ";level + 1
-4942  Gosub {11}
-      Gosub {4150}
-      Goto {2100}
+4942  Gosub 11
+      Gosub 4150
+      Goto 2100
 4950  i = 1 + Rnd(2)
       partySize = partySize - i
-      If partySize <= 0 Then {8325}
+      If partySize <= 0 Then 8325
       Print i;" of your men fell into the bottomless"
 4951  Print "pit. there are only ";partySize;" of you left.";
-      Goto {1501}
+      Goto 1501
 5000  Poke 0,15
       Poke 24,2
       Call 2
-      Goto {2100}
+      Goto 2100
 5045  x = i
       y = j
-      Gosub {11}
-      If rt = 0 Then {4170}
+      Gosub 11
+      If rt = 0 Then 4170
       Print "this map!"
 5050  p = 9
       For i = 1 To 8
@@ -942,8 +965,8 @@
           Call 2
           p = p - 1
       Next i
-      Goto {1501}
-6000  If Not(level = 3 And(x = wx Or x = wx + 1) And(y = wy Or y = wy + 1)) Then {5000}
+      Goto 1501
+6000  If Not(level = 3 And(x = wx Or x = wx + 1) And(y = wy Or y = wy + 1)) Then 5000
       maze(1) = 10
       maze(2) = 3
       maze(3) = 10
@@ -973,15 +996,15 @@
       d =(Abs(maze(t) Mod 10) < 2)
       dc = - 1
       u = 0
-      If level = 0 And y = 1 Then {7005}
+      If level = 0 And y = 1 Then 7005
 7002  u =(Abs(maze(t - 13) Mod 10) < 2)
 7005  dx =(x > sx) * r -(x < sx) * l
       dy =(y > sy) * d -(y < sy) * u
       i = Rnd(2)
-      If dx # 0 Or dy # 0 Then {7018}
+      If dx # 0 Or dy # 0 Then 7018
       dx = r - l
       dy = d - u
-      If ct < 4 Then {7018}
+      If ct < 4 Then 7018
 7015  dx = Sgn(x - sx)
       dy = Sgn(y - sy)
 7018  If dx # 0 And dy # 0 Then dx = dx * i
@@ -995,11 +1018,11 @@
       hy = qy
       For i = 1 To 3
           Color= 0
-          Gosub {10}
+          Gosub 10
           Color= colours(14)
           hx = hx + dx
           hy = hy + dy
-          Gosub {10}
+          Gosub 10
       Next i
       qx = hx
       qy = hy
@@ -1011,7 +1034,7 @@
       Pop
 8000  For i = 1 To 6
           Color= 1 +(i Mod 2) * 4
-          Gosub {10}
+          Gosub 10
           For j = 1 To 8
               Poke 0,5
               Poke 24,2
@@ -1021,12 +1044,12 @@
       sx = - 1
       sy = - 1
       a$ = "dragon"
-      If wp Then {4750}
-8002  If partySize <= 2 Then {8325}
+      If wp Then 4750
+8002  If partySize <= 2 Then 8325
       partySize = partySize - 2
       Call - 936
       Print "the dragon ate two of your party."
-      Goto {3750}
+      Goto 3750
 8300  dc = - 1
       Poke 50,63
       Call - 936
@@ -1045,7 +1068,7 @@
       Tab 29
       Print "white=stairsd.green=monst ";
       If level = 1 Or level = 2 Then Print "olive=gas";
-      Goto {1501}
+      Goto 1501
 8325  Text
       Call - 936
       Vtab 10
