@@ -6,16 +6,19 @@
 5   {delaytwosec} * Delay two seconds
 6   {delaysec} * Delay a second
 7   {delayhalfsec} * Delay half a second
-
+10  {drawSquare} *Draw Square, current colour, current position.
 11 	{convertPosition} * Convert xPos,yPos to position in maze, contents and screen position
 12  {findEmptySlot} * Find an empty slot (upper digit is zero)
 13  {openSquareRoom} * Find a square which is the upper left of open four
 14  {} erase on the display
 15  {} on first two levels, make the first one a gas area (9x)
 16  {openSquareWalls} remove walls to make a square. move to one of the 4 squares randomly.
+18  {readKeyboardGasCheck} *_Read Keyboard Checking for Gas
+
+500 {moveSpectre} *Move the Spectre
 769 {initialise} *_Initialise Game
 770 {} display title page (poke 50,63 is inverse poke 50,127 is normal)
-780 {} *install machine code.
+780 {} *install machine code to play beeps etc.
 
 801 {createMaze} *_Create the maze
 802 {} *dimension 13x13x4 maze and fill with '3' (wall right and below)
@@ -38,9 +41,56 @@
 1212 {} Pits, check there is something to fall through to.
 1215 {} No stairs on L1
 1220 {} One treasureless monster.
-1260 {} * Special stuff Level 4.
+1260 {} * Special stuff Level 4. Find position on edge. Find start position
+1265 {} Draw Frame
+1290 {} Get monster Names
+1500 {prompt} *Prompt for command, check for gas
+1501 {getCommand} *Get command, update bosses if not invisible.
+1520 {executeCommand} Execute Command
+1560 {displayCommands} Display command list
 
+2000 {moveRight} * Move Right
+2020 {moveCode} *_General Move Code
+2500 {moveLeft} * Move Left
+3000 {moveUp} * Move Up
+3500 {moveDown} * Move Down
+3700 {jump} *Jump Hazard
+3740 {displayStatus} *Display Status
+3755 {flyOnCarpet} * Fly on Magic Carpet
+3900 {takeInvisibilityPotion} *Take invisibility potion
+4250 {checkBossMonster} *_Check for boss monster
+4255 {} *Create Spectre
+4256 {createSerpent} *Create Serpent
+4259 {exitBossMonster} exit boss monster creation
+4260 {createDragon} *Create Dragon
+4310 {searchTreasure} *Search for treasure
+6000 {exitMaze} *Exit the Maze
+6005 {} Play victory tune
+6006 {} Victory Status
+7000 {moveDragon} *Move Dragon
+8300 {colourCodes} *Display Colour Codes
+8325 {allDied} *Party has been wiped out.
 
 # 0 nothing x1 wall right x2 wall below x3 wall right and below
 # 2x pit trap 3x necromancer/pterodactyl 4x monster (no treasure) 5x stairs 6x rock 7x treasure
 # 8x monster with treasure 9x gas , -ve if not displayed yet.
+
+
+# TODO:
+# 18-30 		Keyboard and Gas Code
+# 40-60 		Serpent Move code (??)
+# 500-707 		Spectre Move code
+# 780-785 		Machine code music playing.
+# 2020-2170 	Moving code (player)
+# 3755-3781 	Carpet Code
+# 4000-4145 	Stairway code (??)
+# 4255-4270 	Boss creation (x3)
+# 4310-4440 	Search for treasure and random objects
+# 4510-4750 	Battle
+# 4800-4805 	Necromancer/Pterodactyl
+# 4910-4951 	Pit Trap
+# 5000 			?
+# 5045-5050 	?
+# 7000-8002 	Move Dragon
+
+

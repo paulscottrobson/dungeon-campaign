@@ -8,9 +8,19 @@ CP 	{}		hasCarpet 											# non zero when has carpet
 NUM {} 		partySize 											# number of people in your party
 STR {}		strength 											# party strength
 Q 	{} 		level												# Level (0-3)
-
 X 	{} 		xPos 												# Positions
 Y 	{} 		yPos
+K 	{} 		mazeContents 										# Contents of current map square (map/10)
+HX 	{} 		xScreen 											# Screen positions
+HY 	{} 		yScreen
+Q1 	{} 		mazeIndex 											# Index into maze position
+C 	{} 		mazeClearCount 										# Count of maze slots to clear.
+ND  {} 		bossStatus 											# 0 not present, 1 dragon 2 spectre 3 serpent 
+S 	{} 		treasure 											# quadroons carrier
+B$  {} 		monsterName$ 										# name of monsters
+DX 	{} 		xMove 												# movement.
+DY 	{} 		yMove
+V 	{} 		key 												# key pressed 
 
 M( 	{} 		maze( 												# Maze contents
 
@@ -25,14 +35,13 @@ C(	{2-9999} 		colours( 											# Colour codes
 
 GS 	{} 		gasTime 											# Gas exposure time remaining
 RT 	{} 		noGas 												# set to non-zero when not in gas.
-K 	{} 		mazeContents 										# Contents of current map square (map/10)
-HX 	{} 		xScreen 											# Screen positions
-HY 	{} 		yScreen
-Q1 	{} 		mazeIndex 											# Index into maze position
-C 	{} 		mazeClearCount 										# Count of maze slots to clear.
 R 	{} 		moveRight 											# can move right
 D 	{} 		moveDown
 L 	{} 		moveLeft
 U 	{} 		moveUp
-
-
+WX 	{} 		xExit 												# exit position level 4
+WY 	{} 		yExit 						
+DC 	{} 		dragonMoveCount 									# time to move dragon (?)
+SX( {} 		xSerpent( 											# Serpent parts
+SY( {} 		ySerpent( 											
+V1 	{}		isJumping 											# non zero if jumping 

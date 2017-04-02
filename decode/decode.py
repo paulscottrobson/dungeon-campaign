@@ -41,7 +41,7 @@ class Decoder:
 		if comment is not None:
 			#print(lineNumber,comment)
 			if comment["stars"]+comment["spaces"] > 0:
-				width = 90
+				width = 100
 				for i in range(0,comment["stars"]):
 					output.append("# "+("*")*width)
 				for i in range(0,comment["spaces"]):
@@ -204,6 +204,7 @@ class LineComments:
 		coms = [x.strip().replace("\t"," ") for x in coms if x.strip() != ""]
 		self.comments = {}
 		for c in coms:
+			#print(c)
 			mc = re.match("^\\s*(\\d+)\\s*\\{(.*)\\}\\s*(.*)$",c)
 			assert mc is not None,"Bad comment line "+c
 			crec = { "comment":mc.group(3).strip(),"label":mc.group(2),"stars":0,"spaces":0 }
