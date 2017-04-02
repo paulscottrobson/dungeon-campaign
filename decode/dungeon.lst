@@ -1011,7 +1011,8 @@
       a$ = monsterName$(i,i + 11)
       Call - 936
       Print "you've come upon ";Rnd(19) + 5;" ";a$
-4522  Gosub Convertposition.11
+4522  # continue announcements
+      Gosub Convertposition.11
       Print "their strength is ";monStrength;" while yours"
       Print "is ";partySize * strength;". what is your command?"
       Goto Getcommand.1501
@@ -1022,7 +1023,8 @@
       # ****************************************************************************************************
       If xScreen = xMonster And yScreen = yMonster And invisible # 15 Then 4710
       If(xScreen = xMonster Or yScreen = yMonster) And invisible # 15 Then 4560
-4555  Color= colours(8)
+4555  # not in sight line ; remove monster from play
+      Color= colours(8)
       xScreen = 3 * tx - 2
       yScreen = 3 * ty - 2
       Gosub Drawsquare.10
@@ -1033,7 +1035,8 @@
       Gosub Convertposition.11
       monsterInPlay = 0
       Goto Checkmoveresult.2130
-4560  xScreen = xMonster
+4560  # monster approaches player.
+      xScreen = xMonster
       yScreen = yMonster
       For i = 1 To 6
           Color= 0
@@ -1057,7 +1060,8 @@
           Call 2
       Next i
       i = level * 169 + tx + 13 *(ty - 1)
-4711  maze(i) = maze(i) - 10 - 30 *((maze(i) / 10) = 4)
+4711  # remove monster from original position
+      maze(i) = maze(i) - 10 - 30 *((maze(i) / 10) = 4)
       Color= colours(8)
       Plot xScreen + 1,yScreen
       Plot xScreen,yScreen + 1
@@ -1065,62 +1069,79 @@
       Call - 936
       Print
       Tab 6
-4712  Print "use your magic sword(y/n)?";
+4712  # check for magic sword
+      Print "use your magic sword(y/n)?";
       Gosub Readkeyboardgascheck.18
-      If key = 217 Then 4750
+      If key = 217 Then Usedmagicsword.4750
 4713  Call - 936
       Print "battle has begun. hit space bar to roll dice for your attack. hit it again to stop dice.";
       mazeContents = 0
       j = 0
       Gosub Readkeyboardgascheck.18
-4716  i = Rnd(10) + 1
+4716  # ****************************************************************************************************
+      #                                      Next round of battleLoop
+      # ****************************************************************************************************
+      i = Rnd(10) + 1
       Print i
-      If Peek(- 16384) < 128 Then 4716
+      If Peek(- 16384) < 128 Then Battleloop.4716
       l =(partySize * strength * i) > monStrength * 3
       Poke - 16368,0
-4718  Print "you rolled ";i;"."
+4718  # roll complete. j counts number of player successful hits, mazeContents number of enemy successful hits.
+      Print "you rolled ";i;"."
       If l Then Print "you got a hit!"
       If Not l Then Print "no hit."
       j = j + l
 4719  Print "now roll for the enemy.";
       Gosub Readkeyboardgascheck.18
-4721  i = Rnd(10) + 1
+4721  # roll for enemy
+      i = Rnd(10) + 1
       Print i
       If Peek(- 16384) < 128 Then 4721
       Poke - 16368,0
       mazeContents = mazeContents +(i > 7)
-4722  Print
+4722  # result of roll
+      Print
       Print "the enemy gets a ";i
       Print "you've lost ";mazeContents;" of your party."
       Gosub Delaysec.6
-4723  If mazeContents >= partySize Then Alldied.8325
+4723  # check all died ; check all killed (2 hits) ; display none/half dead.
+      If mazeContents >= partySize Then Alldied.8325
       If j = 2 Then 4730
       c$ = "none"
       If j Then c$ = "half"
       Print c$;" of the ";a$;" are dead."
-4724  If mazeContents > 3 Then monStrength = monStrength / 2
-4725  Print "roll again for your side.";
+4724  # lose strength after three hits
+      If mazeContents > 3 Then monStrength = monStrength / 2
+4725  # and roll again
+      Print "roll again for your side.";
       Gosub Readkeyboardgascheck.18
-      Goto 4716
-4730  partySize = partySize - mazeContents
+      Goto Battleloop.4716
+4730  # won the battle (2 hits), maybe lose elf and dwarf
+      partySize = partySize - mazeContents
       strength = strength + 1
       If mazeContents And level And Not elfDead And Rnd(15) > partySize Then 4740
       If mazeContents And level = 2 And Not dwarfDead And Rnd(15) > partySize Then 4741
-4731  Print
+4731  # announce killed.
+      Print
       Print "the ";a$;" were all killed."
       monsterInPlay = 0
       Goto 3750
-4740  elfDead = 1
+4740  # elf dead
+      elfDead = 1
       Print
       Print "the elf was killed. no more warnings."
       Gosub Delaytwosec.5
       Goto 4731
-4741  dwarfDead = 1
+4741  # dwarf dead
+      dwarfDead = 1
       Print
       Print "the dwarf was killed. no more map."
       Gosub Delaytwosec.5
       Goto 4731
-4750  magicSword = 0
+4750  # ****************************************************************************************************
+      #                                   Come here if used magic sword
+      # ****************************************************************************************************
+      magicSword = 0
       strength = strength + monStrength / partySize
       Print
       Print "the magic sword killed the ";a$
@@ -1306,7 +1327,7 @@
       xBoss = - 1
       yBoss = - 1
       a$ = "dragon"
-      If magicSword Then 4750
+      If magicSword Then Usedmagicsword.4750
 8002  If partySize <= 2 Then Alldied.8325
       partySize = partySize - 2
       Call - 936

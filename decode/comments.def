@@ -128,6 +128,22 @@
 4521 {} work out strength and type of monster
 4522 {} continue announcements
 4550 {attackMonster} *_Now in monster fight
+4555 {} not in sight line ; remove monster from play
+4560 {} monster approaches player.
+4711 {} remove monster from original position
+4712 {} check for magic sword
+4716 {battleLoop} *Next round of battleLoop
+4718 {} roll complete. j counts number of player successful hits, mazeContents number of enemy successful hits.
+4721 {} roll for enemy
+4722 {} result of roll
+4723 {} check all died ; check all killed (2 hits) ; display none/half dead.
+4724 {} lose strength after three hits
+4725 {} and roll again
+4730 {} won the battle (2 hits), maybe lose elf and dwarf
+4731 {} announce killed.
+4740 {} elf dead
+4741 {} dwarf dead
+4750 {usedMagicSword} *Come here if used magic sword
 4800 {necroPtero} *Bumped into necromancer/pterodactyl
 4801 {} alternate message, there's no other difference.
 4802 {} play a little tune
@@ -158,8 +174,6 @@
 # 8x monster with treasure 9x gas , -ve if not displayed yet.
 
 
-# TODO:
-# 4550-4750 	Battle
 
 
 
