@@ -202,8 +202,9 @@ class LineComments:
 	def __init__(self,definitionFile):
 		coms = [x if x.find("#") < 0 else x[:x.find("#")] for x in open(definitionFile,"r").readlines()]
 		coms = [x.strip().replace("\t"," ") for x in coms if x.strip() != ""]
-		self.comments = {}
+		self.comments = {}		
 		for c in coms:
+			print(c)
 			#print(c)
 			mc = re.match("^\\s*(\\d+)\\s*\\{(.*)\\}\\s*(.*)$",c)
 			assert mc is not None,"Bad comment line "+c

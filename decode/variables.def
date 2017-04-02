@@ -50,3 +50,7 @@ MP 	{} 		monsterInPlay 										# non zero if monster in play
 SX 	{} 		xBoss 												# boss x position
 SY  {}		yBoss
 CR  {} 		gasTimeOut 											# counter for gas response
+CT  {} 		countChange 										# count to change direction
+LM  {} 		lastDragonMove
+QX 	{} 		xBossScreen
+QY  {} 		yBossScreen

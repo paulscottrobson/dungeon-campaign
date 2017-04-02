@@ -18,7 +18,12 @@
 25  {} dec gas count , loop back if not time out or counter not mod 0
 30  {} one of the party dies, back to prompt.
 40  {moveSerpent} *Move the serpent
-500 {moveSpectre} *Move the Spectre
+500 {moveSpectre} *Move the Spectre. Just floats about chasing you.
+600 {drawEraseSpectre} *Draw the Spectre
+620 {drawSpectreRoutine} *Draw Spectre check for player.
+625 {eraseSpectreRoutine} *Erase Spectre check for player.
+700 {spectreGotParty} *Spectre got party
+705 {removeSpectre} Erase the Spectre
 769 {initialise} *_Initialise Game
 770 {} display title page (poke 50,63 is inverse poke 50,127 is normal)
 780 {} *install machine code for sound see sound.asm and music.ods
@@ -93,11 +98,14 @@
 4160 {} draw the frame
 4170 {} redraw the bits we've already seen.
 4220 {} draw exit if required.
-4250 {checkBossMonster} *_Check for boss monster
-4255 {} *Create Spectre
+4250 {checkBossMonster} *_Check for boss monster / Create Spectre
+4255 {} *Display Information
 4256 {createSerpent} *Create Serpent
 4259 {exitBossMonster} exit boss monster creation
 4260 {createDragon} *Create Dragon
+4265 {} Find empty slot for dragon, at least six squares away. Fix back and update player pos
+4267 {} announce warning message
+4270 {} play sound , click speaker repeatedly.
 4310 {searchTreasure} *Search for treasure
 4325 {foundTreasure} found treasure (7) w/monster (8), do sfx and gfx. remove it / convert to monster
 4328 {} work out treasure value
@@ -123,7 +131,13 @@
 6000 {exitMaze} *Exit the Maze
 6005 {} Play victory tune
 6006 {} Victory Status
-7000 {moveDragon} *Move Dragon
+7000 {moveDragon} *Move Dragon. Figure out which way it can go.
+7002 {} top level safe at the top.
+7005 {} chase the player, if move ok skip out
+7015 {} forced directional move.
+7018 {} pick only horiz or vertical where both available.
+7020 {} animate the move
+7030 {} return if not at player else fall through into bumped into dragon.
 8000 {foundDragon} *Bumped into dragon
 8300 {colourCodes} *Display Colour Codes
 8325 {allDied} *Party has been wiped out.
@@ -137,9 +151,8 @@
 # 40-60 		Serpent Move code
 # 500-707 		Spectre Move code
 # 780-785 		Machine code music playing (disassemble)
-# 4255-4270 	Boss creation (x3)
+# 4256-4259 	Create Serpent
 # 4510-4750 	Battle
-# 7000-8002 	Dragon Move code
 
 
 

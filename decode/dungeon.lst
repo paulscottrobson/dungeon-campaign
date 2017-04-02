@@ -101,8 +101,8 @@
       # ****************************************************************************************************
       m = 1
       i = Rnd(2)
-      xBoss = xSerpent(1) + qx * i
-      yBoss = ySerpent(1) + qy *(i = 0)
+      xBoss = xSerpent(1) + xBossScreen * i
+      yBoss = ySerpent(1) + yBossScreen *(i = 0)
   41  If xBoss < 1 Or yBoss < 1 Or xBoss > 38 Or yBoss > 38 Then 60
   42  n = Scrn(xBoss,yBoss)
       If n = colours(5) Then 50
@@ -119,10 +119,10 @@
       Next i
       Return
   47  m = 1
-      qx =(xBoss = 1) -(xBoss = 38)
-      qy =(yBoss = 1) -(yBoss = 38)
-      If qx = 0 Then qx = 2 * Rnd(2) - 1
-      If qy = 0 Then qy = 2 * Rnd(2) - 1
+      xBossScreen =(xBoss = 1) -(xBoss = 38)
+      yBossScreen =(yBoss = 1) -(yBoss = 38)
+      If xBossScreen = 0 Then xBossScreen = 2 * Rnd(2) - 1
+      If yBossScreen = 0 Then yBossScreen = 2 * Rnd(2) - 1
       Goto Moveserpent.40
   50  Color= 8
       Plot xBoss,yBoss
@@ -142,60 +142,73 @@
       Pop
       Goto 3750
   60  If m = 0 Then 47
-      xBoss = xBoss - qx * i + qx *(i = 0)
-      yBoss = yBoss - qy *(i = 0) + qy * i
+      xBoss = xBoss - xBossScreen * i + xBossScreen *(i = 0)
+      yBoss = yBoss - yBossScreen *(i = 0) + yBossScreen * i
       m = 0
       Goto 41
  500  # ****************************************************************************************************
-      #                                          Move the Spectre
+      #                          Move the Spectre. Just floats about chasing you.
       # ****************************************************************************************************
       d = 0
       u = 625
-      Gosub 600
+      Gosub Drawerasespectre.600
       u = 620
-      qx = qx + Sgn(xScreen - qx) -(yScreen = qy)
-      qy = qy + Sgn(yScreen - qy) -(xScreen = qx)
-      Gosub 600
-      If d = 1 Then 700
+      xBossScreen = xBossScreen + Sgn(xScreen - xBossScreen) -(yScreen = yBossScreen)
+      yBossScreen = yBossScreen + Sgn(yScreen - yBossScreen) -(xScreen = xBossScreen)
+      Gosub Drawerasespectre.600
+      If d = 1 Then Spectregotparty.700
       dragonMoveCount = 0
       Return
- 600  For i = - 1 To 2
-          l = qy
-          r = qx + i
+ 600  # ****************************************************************************************************
+      #                                          Draw the Spectre
+      # ****************************************************************************************************
+      For i = - 1 To 2
+          l = yBossScreen
+          r = xBossScreen + i
           Gosub u
-          l = qy + 1
+          l = yBossScreen + 1
           Gosub u
       Next i
       For i = 0 To 1
-          l = qy - 1
-          r = qx + i
+          l = yBossScreen - 1
+          r = xBossScreen + i
           Gosub u
-          l = qy + 2
+          l = yBossScreen + 2
           Gosub u
       Next i
       Return
- 620  If Scrn(r,l) = colours(5) Then d = 1
+ 620  # ****************************************************************************************************
+      #                                   Draw Spectre check for player.
+      # ****************************************************************************************************
+      If Scrn(r,l) = colours(5) Then d = 1
       Color= colours(16)
       If Scrn(r,l) = 0 Then Plot r,l
       Return
- 625  Color= 0
+ 625  # ****************************************************************************************************
+      #                                  Erase Spectre check for player.
+      # ****************************************************************************************************
+      Color= 0
       If Scrn(r,l) = colours(16) Then Plot r,l
       Return
- 700  Call - 936
+ 700  # ****************************************************************************************************
+      #                                         Spectre got party
+      # ****************************************************************************************************
+      Call - 936
       Print
       Print "the spectre got one of your party!"
       bossStatus = 0
- 705  u = 620
-      Gosub 600
+ 705  # Erase the Spectre
+      u = 620
+      Gosub Drawerasespectre.600
       Color= colours(5)
-      If Scrn(qx,qy) = colours(16) Then Plot qx,qy
+      If Scrn(xBossScreen,yBossScreen) = colours(16) Then Plot xBossScreen,yBossScreen
       Color= colours(16)
-      If Scrn(qx + 1,qy) = colours(5) Then Plot qx + 1,qy
+      If Scrn(xBossScreen + 1,yBossScreen) = colours(5) Then Plot xBossScreen + 1,yBossScreen
       u = 625
-      Gosub 600
- 707  qx = qx - 1
-      If qx > 1 Then 705
-      Plot qx + 1,qy
+      Gosub Drawerasespectre.600
+ 707  xBossScreen = xBossScreen - 1
+      If xBossScreen > 1 Then Removespectre.705
+      Plot xBossScreen + 1,yBossScreen
       partySize = partySize - 1
       Pop
       Goto 3750
@@ -224,7 +237,7 @@
       Gosub Delaysec.6
       Poke 50,255
  780  # ****************************************************************************************************
-      #                              install machine code to play beeps etc.
+      #                     install machine code for sound see sound.asm and music.ods
       # ****************************************************************************************************
       Poke 2,173
       Poke 3,48
@@ -785,7 +798,7 @@
       Return
 4250  # ****************************************************************************************************
       #
-      #                                       Check for boss monster
+      #                              Check for boss monster / Create Spectre
       #
       # ****************************************************************************************************
       dragonMoveCount = 0
@@ -794,16 +807,16 @@
       If level = 2 Then Createserpent.4256
       bossStatus = 2
       u = 620
-      qx = 36
-      qy = 36
-      Gosub 600
+      xBossScreen = 36
+      yBossScreen = 36
+      Gosub Drawerasespectre.600
       Poke 50,63
       Call - 936
       For i = 1 To 83
           Print " ";
       Next i
 4255  # ****************************************************************************************************
-      #                                           Create Spectre
+      #                                        Display Information
       # ****************************************************************************************************
       Print "a spectre has entered the dungeon";
       For i = 1 To 83
@@ -816,8 +829,8 @@
       # ****************************************************************************************************
       u = xPos
       d = yPos
-      qx = 1
-      qy = 1
+      xBossScreen = 1
+      yBossScreen = 1
       Gosub Findemptyslot.12
       bossStatus = 3
       Color= 8
@@ -847,27 +860,30 @@
       #                                           Create Dragon
       # ****************************************************************************************************
       bossStatus = 1
-      qx = xPos
-      qy = yPos
-4265  Gosub Findemptyslot.12
-      If Abs(xPos - qx) + Abs(yPos - qy) < 6 Then 4265
+      xBossScreen = xPos
+      yBossScreen = yPos
+4265  # Find empty slot for dragon, at least six squares away. Fix back and update player pos
+      Gosub Findemptyslot.12
+      If Abs(xPos - xBossScreen) + Abs(yPos - yBossScreen) < 6 Then 4265
       Color= colours(14)
       Gosub Drawsquare.10
       xBoss = xPos
       yBoss = yPos
-      xPos = qx
-      yPos = qy
-      qx = xScreen
-      qy = yScreen
+      xPos = xBossScreen
+      yPos = yBossScreen
+      xBossScreen = xScreen
+      yBossScreen = yScreen
       Gosub Convertposition.11
-4267  Call - 936
+4267  # announce warning message
+      Call - 936
       Print
       Poke 50,127
       Print "danger!!!";
       Poke 50,63
       Print " you woke a man-eating dragon!"
       Poke 50,255
-4270  For i = 1 To 70
+4270  # play sound , click speaker repeatedly.
+      For i = 1 To 70
           d = Peek(- 16336)
           For j = 1 To 3
       Next j,i
@@ -1210,7 +1226,7 @@
       Print "come again soon."
       End
 7000  # ****************************************************************************************************
-      #                                            Move Dragon
+      #                            Move Dragon. Figure out which way it can go.
       # ****************************************************************************************************
       t = level * 169 + xBoss + 13 *(yBoss - 1)
       r =(Abs(maze(t) Mod 2) = 0)
@@ -1219,25 +1235,30 @@
       dragonMoveCount = - 1
       u = 0
       If level = 0 And yPos = 1 Then 7005
-7002  u =(Abs(maze(t - 13) Mod 10) < 2)
-7005  xMove =(xPos > xBoss) * r -(xPos < xBoss) * l
+7002  # top level safe at the top.
+      u =(Abs(maze(t - 13) Mod 10) < 2)
+7005  # chase the player, if move ok skip out
+      xMove =(xPos > xBoss) * r -(xPos < xBoss) * l
       yMove =(yPos > yBoss) * d -(yPos < yBoss) * u
       i = Rnd(2)
       If xMove # 0 Or yMove # 0 Then 7018
       xMove = r - l
       yMove = d - u
-      If ct < 4 Then 7018
-7015  xMove = Sgn(xPos - xBoss)
+      If countChange < 4 Then 7018
+7015  # forced directional move.
+      xMove = Sgn(xPos - xBoss)
       yMove = Sgn(yPos - yBoss)
-7018  If xMove # 0 And yMove # 0 Then xMove = xMove * i
+7018  # pick only horiz or vertical where both available.
+      If xMove # 0 And yMove # 0 Then xMove = xMove * i
       If xMove # 0 And yMove # 0 Then yMove = 0
-      If 2 * xMove + 3 * yMove # - lm Then ct = - 1
-      ct = ct + 1
-      lm = 2 * xMove + 3 * yMove
+      If 2 * xMove + 3 * yMove # - lastDragonMove Then countChange = - 1
+      countChange = countChange + 1
+      lastDragonMove = 2 * xMove + 3 * yMove
       u = xScreen
       r = yScreen
-7020  xScreen = qx
-      yScreen = qy
+7020  # animate the move
+      xScreen = xBossScreen
+      yScreen = yBossScreen
       For i = 1 To 3
           Color= 0
           Gosub Drawsquare.10
@@ -1246,13 +1267,14 @@
           yScreen = yScreen + yMove
           Gosub Drawsquare.10
       Next i
-      qx = xScreen
-      qy = yScreen
+      xBossScreen = xScreen
+      yBossScreen = yScreen
       xBoss = xBoss + xMove
       yBoss = yBoss + yMove
       xScreen = u
       yScreen = r
-7030  If xPos # xBoss Or yPos # yBoss Then Return
+7030  # return if not at player else fall through into bumped into dragon.
+      If xPos # xBoss Or yPos # yBoss Then Return
       Pop
 8000  # ****************************************************************************************************
       #                                         Bumped into dragon
