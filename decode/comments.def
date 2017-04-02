@@ -14,7 +14,10 @@
 15  {} on first two levels, make the first one a gas area (9x)
 16  {openSquareWalls} remove walls to make a square. move to one of the 4 squares randomly.
 18  {readKeyboardGasCheck} *_Read Keyboard Checking for Gas
-
+20  {noKey}No check for gas if there is none and not the serpent boss, move serpent ? back if count not mod =0
+25  {} dec gas count , loop back if not time out or counter not mod 0
+30  {} one of the party dies, back to prompt.
+40  {moveSerpent} *Move the serpent
 500 {moveSpectre} *Move the Spectre
 769 {initialise} *_Initialise Game
 770 {} display title page (poke 50,63 is inverse poke 50,127 is normal)
@@ -50,7 +53,17 @@
 1560 {displayCommands} Display command list
 
 2000 {moveRight} * Move Right
-2020 {moveCode} *_General Move Code
+2020 {moveCode} *_General Move Code (validated in maze). Erase if dwarf dead, animate movement, do actual move.
+2100 {} Reconvert position. , if not in gas 
+2102 {} * Make Gas area visible Look in [-1,-1] [0,-1] [-1,0] [0,0] for gas
+2105 {} Draw gas cells
+2110 {} Redraw player
+2120 {completeMove} *Show walls, update dragon count, if jumping do it again w/o checks
+2130 {checkMoveResult} get new maze contents, handle stairs (5) or stairs on next level (+169)
+2145 {} if elf dead then no warning.
+2150 {} check in four directions for pit trap/necromancer/pterodactyl
+2160 {reportDanger} report danger near
+2170 {exitMove} * Check what you hit : monster (4 or 8) 2 (pit) 3 (necro/ptero)
 2500 {moveLeft} * Move Left
 3000 {moveUp} * Move Up
 3500 {moveDown} * Move Down
@@ -58,16 +71,24 @@
 3740 {displayStatus} *Display Status
 3755 {flyOnCarpet} * Fly on Magic Carpet
 3900 {takeInvisibilityPotion} *Take invisibility potion
+4000 {eraseDisplayedWalls} *Erase displayed walls unless below visible
+4005 {drawDisplayedWalls} *Draw displayed walls 
+4110 {stairsHandler} *Handle Stairs
 4250 {checkBossMonster} *_Check for boss monster
 4255 {} *Create Spectre
 4256 {createSerpent} *Create Serpent
 4259 {exitBossMonster} exit boss monster creation
 4260 {createDragon} *Create Dragon
 4310 {searchTreasure} *Search for treasure
+4510 {foundMonster} *_Bumped into monster
+4800 {necroPtero} *Bumped into necromancer/pterodactyl
+4910 {pitTrap} *Bumped into pit trap
+5000 {moveFail} *Bumped into solid wall, sfx and recheck.
 6000 {exitMaze} *Exit the Maze
 6005 {} Play victory tune
 6006 {} Victory Status
 7000 {moveDragon} *Move Dragon
+8000 {foundDragon} *Bumped into dragon
 8300 {colourCodes} *Display Colour Codes
 8325 {allDied} *Party has been wiped out.
 
@@ -77,20 +98,19 @@
 
 
 # TODO:
-# 18-30 		Keyboard and Gas Code
-# 40-60 		Serpent Move code (??)
+# 40-60 		Serpent Move code
 # 500-707 		Spectre Move code
 # 780-785 		Machine code music playing.
-# 2020-2170 	Moving code (player)
 # 3755-3781 	Carpet Code
-# 4000-4145 	Stairway code (??)
+# 4000-4040 	Draw/erase wall
+# 4100-4220 	Stairway code 
 # 4255-4270 	Boss creation (x3)
 # 4310-4440 	Search for treasure and random objects
 # 4510-4750 	Battle
 # 4800-4805 	Necromancer/Pterodactyl
 # 4910-4951 	Pit Trap
 # 5000 			?
-# 5045-5050 	?
+# 5045-5050 	End of treasure found ?
 # 7000-8002 	Move Dragon
 
 

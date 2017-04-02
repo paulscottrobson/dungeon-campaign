@@ -74,31 +74,37 @@
       #
       # ****************************************************************************************************
       key = Peek(- 16384)
-      If key < 128 Then 20
+      If key < 128 Then Nokey.20
       Poke - 16368,0
       noGas = 1
       Return
-  20  If noGas = 1 And bossStatus # 3 Then Readkeyboardgascheck.18
-      If bossStatus = 3 Then Gosub 40
-      cr = cr + 1
-      If(cr Mod(5 + 15 *(bossStatus # 3))) # 0 Or noGas = 1 Then Readkeyboardgascheck.18
-  25  Tab 35
+  20  # No check for gas if there is none and not the serpent boss, move serpent ? back if count not mod =0
+      If noGas = 1 And bossStatus # 3 Then Readkeyboardgascheck.18
+      If bossStatus = 3 Then Gosub Moveserpent.40
+      gasTimeOut = gasTimeOut + 1
+      If(gasTimeOut Mod(5 + 15 *(bossStatus # 3))) # 0 Or noGas = 1 Then Readkeyboardgascheck.18
+  25  # dec gas count , loop back if not time out or counter not mod 0
+      Tab 35
       gasTime = gasTime -(gasTime > 0)
       Print gasTime;
-      If gasTime # 0 Or((cr Mod(10 + 30 *(bossStatus # 3))) # 0) Then Readkeyboardgascheck.18
-  30  partySize = partySize - 1
+      If gasTime # 0 Or((gasTimeOut Mod(10 + 30 *(bossStatus # 3))) # 0) Then Readkeyboardgascheck.18
+  30  # one of the party dies, back to prompt.
+      partySize = partySize - 1
       Print
       Print " one of your party died from the gas.";
       Gosub Delaytwosec.5
       If partySize <= 0 Then Alldied.8325
       Pop
       Goto Prompt.1500
-  40  m = 1
+  40  # ****************************************************************************************************
+      #                                          Move the serpent
+      # ****************************************************************************************************
+      m = 1
       i = Rnd(2)
-      sx = xSerpent(1) + qx * i
-      sy = ySerpent(1) + qy *(i = 0)
-  41  If sx < 1 Or sy < 1 Or sx > 38 Or sy > 38 Then 60
-  42  n = Scrn(sx,sy)
+      xBoss = xSerpent(1) + qx * i
+      yBoss = ySerpent(1) + qy *(i = 0)
+  41  If xBoss < 1 Or yBoss < 1 Or xBoss > 38 Or yBoss > 38 Then 60
+  42  n = Scrn(xBoss,yBoss)
       If n = colours(5) Then 50
       If n = colours(level + 1) Mod 16 Or n = colours(9) Then 60
       m = 1
@@ -106,27 +112,27 @@
       Color= moveUp +(8 *(moveUp # 0))
   45  Plot xSerpent(8),ySerpent(8)
       Color= 8 +(n *(n # 8))
-      Plot sx,sy
+      Plot xBoss,yBoss
       For i = 8 To 1 Step - 1
           xSerpent(i) = xSerpent(i - 1)
           ySerpent(i) = ySerpent(i - 1)
       Next i
       Return
   47  m = 1
-      qx =(sx = 1) -(sx = 38)
-      qy =(sy = 1) -(sy = 38)
+      qx =(xBoss = 1) -(xBoss = 38)
+      qy =(yBoss = 1) -(yBoss = 38)
       If qx = 0 Then qx = 2 * Rnd(2) - 1
       If qy = 0 Then qy = 2 * Rnd(2) - 1
-      Goto 40
+      Goto Moveserpent.40
   50  Color= 8
-      Plot sx,sy
+      Plot xBoss,yBoss
       Gosub Delaysec.6
       Call - 936
       Print
       Print " the serpent ate one of your party!"
       Color= 0
       Gosub Delayhalfsec.7
-  55  Plot sx,sy
+  55  Plot xBoss,yBoss
       For i = 1 To 8
           Plot xSerpent(i),ySerpent(i)
           For j = 1 To 200
@@ -136,8 +142,8 @@
       Pop
       Goto 3750
   60  If m = 0 Then 47
-      sx = sx - qx * i + qx *(i = 0)
-      sy = sy - qy *(i = 0) + qy * i
+      xBoss = xBoss - qx * i + qx *(i = 0)
+      yBoss = yBoss - qy *(i = 0) + qy * i
       m = 0
       Goto 41
  500  # ****************************************************************************************************
@@ -243,8 +249,8 @@
       Poke 22,0
       Poke 23,96
  790  Dim xSerpent(8),ySerpent(8),colours(16)
-      sx = 0
-      sy = 0
+      xBoss = 0
+      yBoss = 0
       partySize = 15
       strength = 1
       noGas = 1
@@ -479,15 +485,15 @@
 2000  # ****************************************************************************************************
       #                                             Move Right
       # ****************************************************************************************************
-      If maze(mazeIndex) Mod 2 # 0 Then 5000
+      If maze(mazeIndex) Mod 2 # 0 Then Movefail.5000
       xMove = 1
       yMove = 0
 2020  # ****************************************************************************************************
       #
-      #                                         General Move Code
+      #   General Move Code (validated in maze). Erase if dwarf dead, animate movement, do actual move.
       #
       # ****************************************************************************************************
-      If dwarfDead Then Gosub 4000
+      If dwarfDead Then Gosub Erasedisplayedwalls.4000
       For i = 1 To 3
           Color=(colours(13)) *((maze(mazeIndex) / 10) = 9)
           Gosub Drawsquare.10
@@ -498,85 +504,101 @@
       Next i
       xPos = xPos + xMove
       yPos = yPos + yMove
-2100  Gosub Convertposition.11
-      If mazeContents # - 9 Then 2120
+2100  # Reconvert position. , if not in gas
+      Gosub Convertposition.11
+      If mazeContents # - 9 Then Completemove.2120
       i = xPos
       j = yPos
       xPos = xPos - 1
       yPos = yPos - 1
-2102  Gosub Convertposition.11
+2102  # ****************************************************************************************************
+      #                 Make Gas area visible Look in [-1,-1] [0,-1] [-1,0] [0,0] for gas
+      # ****************************************************************************************************
+      Gosub Convertposition.11
       If mazeContents = - 9 Then 2105
       xPos = xPos + 1
       If xPos = i Then 2102
       yPos = yPos + 1
       xPos = xPos - 2
       Goto 2102
-2105  Color= colours(13)
+2105  # Draw gas cells
+      Color= colours(13)
       For moveUp = 0 To 4
           Vlin yScreen,yScreen + 4 At xScreen + moveUp
       Next moveUp
-      Gosub 4005
+      Gosub Drawdisplayedwalls.4005
       xPos = xPos + 1
-      Gosub 4005
+      Gosub Drawdisplayedwalls.4005
       yPos = yPos + 1
-      Gosub 4005
+      Gosub Drawdisplayedwalls.4005
       xPos = xPos - 1
-      Gosub 4005
+      Gosub Drawdisplayedwalls.4005
       xPos = i
       yPos = j
-2110  Gosub Convertposition.11
+2110  # Redraw player
+      Gosub Convertposition.11
       Color= invisible + colours(5)
       Gosub Drawsquare.10
-2120  Gosub 4005
+2120  # ****************************************************************************************************
+      #                 Show walls, update dragon count, if jumping do it again w/o checks
+      # ****************************************************************************************************
+      Gosub Drawdisplayedwalls.4005
       If bossStatus = 1 Then dragonMoveCount = dragonMoveCount + 1
-      If mp # 0 Then 4550
-      If Not isJumping Then 2130
+      If monsterInPlay # 0 Then 4550
+      If Not isJumping Then Checkmoveresult.2130
       isJumping = 0
       Goto Executecommand.1520
-2130  j = 1
+2130  # get new maze contents, handle stairs (5) or stairs on next level (+169)
+      j = 1
       mazeContents = Abs(mazeContents)
-      If level # 0 And mazeContents = 5 Then 4110
+      If level # 0 And mazeContents = 5 Then Stairshandler.4110
       j = 0
-      If level # 3 Then If Abs(maze(mazeIndex + 169) / 10) = 5 Then 4110
-2145  If elfDead Or(level = 0 And yPos = 1) Or(level = 3 And yPos = 13) Then 2170
-2150  For moveDown = - 1 To 1 Step 2
+      If level # 3 Then If Abs(maze(mazeIndex + 169) / 10) = 5 Then Stairshandler.4110
+2145  # if elf dead then no warning.
+      If elfDead Or(level = 0 And yPos = 1) Or(level = 3 And yPos = 13) Then Exitmove.2170
+2150  # check in four directions for pit trap/necromancer/pterodactyl
+      For moveDown = - 1 To 1 Step 2
           For moveUp = 1 To 13 Step 12
               i = Abs(maze(mazeIndex + moveDown * moveUp) / 10)
-              If i = 2 Or i = 3 Then 2160
+              If i = 2 Or i = 3 Then Reportdanger.2160
       Next moveUp,moveDown
-      Goto 2170
-2160  Poke 50,127
+      Goto Exitmove.2170
+2160  # report danger near
+      Poke 50,127
       Call - 936
       Print
       Tab 10
       Print "beware! danger near!"
       Poke 50,255
       Gosub Delayhalfsec.7
-2170  If mazeContents = 4 Or mazeContents = 8 Then 4510
-      If bossStatus = 1 And invisible # 15 And xPos = sx And yPos = sy Then 8000
-      If mazeContents = 3 Then 4800
-      If mazeContents = 2 Then 4910
+2170  # ****************************************************************************************************
+      #                   Check what you hit : monster (4 or 8) 2 (pit) 3 (necro/ptero)
+      # ****************************************************************************************************
+      If mazeContents = 4 Or mazeContents = 8 Then Foundmonster.4510
+      If bossStatus = 1 And invisible # 15 And xPos = xBoss And yPos = yBoss Then Founddragon.8000
+      If mazeContents = 3 Then Necroptero.4800
+      If mazeContents = 2 Then Pittrap.4910
       Goto Prompt.1500
 2500  # ****************************************************************************************************
       #                                             Move Left
       # ****************************************************************************************************
-      If xPos = 1 Then 5000
-      If maze(mazeIndex - 1) Mod 2 # 0 Then 5000
+      If xPos = 1 Then Movefail.5000
+      If maze(mazeIndex - 1) Mod 2 # 0 Then Movefail.5000
       xMove = - 1
       yMove = 0
       Goto Movecode.2020
 3000  # ****************************************************************************************************
       #                                              Move Up
       # ****************************************************************************************************
-      If yPos = 1 Then 5000
-      If(Abs(maze(mazeIndex - 13) Mod 10)) > 1 Then 5000
+      If yPos = 1 Then Movefail.5000
+      If(Abs(maze(mazeIndex - 13) Mod 10)) > 1 Then Movefail.5000
       xMove = 0
       yMove = - 1
       Goto Movecode.2020
 3500  # ****************************************************************************************************
       #                                             Move Down
       # ****************************************************************************************************
-      If(Abs(maze(mazeIndex) Mod 10)) > 1 Then 5000
+      If(Abs(maze(mazeIndex) Mod 10)) > 1 Then Movefail.5000
       xMove = 0
       yMove = 1
       Goto Movecode.2020
@@ -624,12 +646,12 @@
       Next i
       xPos = xPos + xMove
 3775  Gosub Convertposition.11
-      Gosub 4005
+      Gosub Drawdisplayedwalls.4005
       If Peek(- 16384) < 128 Then 3760
       Poke - 16368,0
       hasCarpet = 0
-      If mp Then 4555
-      Goto 2130
+      If monsterInPlay Then 4555
+      Goto Checkmoveresult.2130
 3780  For i = 1 To 3
           Color= Scrn(xScreen,yScreen + yMove +(yMove = 1)) + colours(5)
           Hlin xScreen,xScreen + 1 At yScreen + yMove +(yMove = 1)
@@ -646,11 +668,17 @@
       Color= invisible + colours(5)
       Gosub Drawsquare.10
       Goto 5050
-4000  Color= colours(level + 1) *(colours(level + 1) > 16)
+4000  # ****************************************************************************************************
+      #                             Erase displayed walls unless below visible
+      # ****************************************************************************************************
+      Color= colours(level + 1) *(colours(level + 1) > 16)
       Goto 4010
 4002  maze(mazeIndex) = - Abs(maze(mazeIndex))
       Goto 4010
-4005  Color= colours(level + 1)
+4005  # ****************************************************************************************************
+      #                                        Draw displayed walls
+      # ****************************************************************************************************
+      Color= colours(level + 1)
       Gosub Convertposition.11
 4010  p = maze(mazeIndex)
       If p > 0 And mazeContents # 5 Then Return
@@ -664,7 +692,10 @@
       If noGas And maze(mazeIndex + 13) > 0 Then Return
       If(p Mod 10) < - 1 Then Hlin 3 *(xPos - 1),3 * xPos At 3 * yPos
       Return
-4110  Color= colours(9)
+4110  # ****************************************************************************************************
+      #                                           Handle Stairs
+      # ****************************************************************************************************
+      Color= colours(9)
       i = Sgn(maze(mazeIndex))
       noGas = 0
       Gosub 4002
@@ -690,15 +721,15 @@
       Gosub Convertposition.11
       Call - 936
       Gosub 4150
-      Goto 2130
+      Goto Checkmoveresult.2130
 4150  Gr
       Color= colours(5)
       Gosub Drawsquare.10
-      mp = 0
+      monsterInPlay = 0
       noGas = 0
       bossStatus = 0
-      sx = - 1
-      sy = - 1
+      xBoss = - 1
+      yBoss = - 1
       If invisible = 15 Then invisible = 0
 4160  Color= colours(level + 1)
       Vlin 0,39 At 0
@@ -724,7 +755,7 @@
       noGas = 1
       xPos = j
       yPos = moveUp
-      Gosub 4005
+      Gosub Drawdisplayedwalls.4005
 4220  Color= 0
       If level = 3 And(yExit = 0 Or yExit = 13) Then Hlin 3 * xExit - 2,3 * xExit - 1 At 3 * yExit
       If level = 3 And(xExit = 0 Or xExit = 13) Then Vlin 3 * yExit - 2,3 * yExit - 1 At 3 * xExit
@@ -799,8 +830,8 @@
       If Abs(xPos - qx) + Abs(yPos - qy) < 6 Then 4265
       Color= colours(14)
       Gosub Drawsquare.10
-      sx = xPos
-      sy = yPos
+      xBoss = xPos
+      yBoss = yPos
       xPos = qx
       yPos = qy
       qx = xScreen
@@ -856,7 +887,7 @@
               If mazeContents # moveUp And mazeContents # moveDown Then 4346
               Color= colours(moveUp + 4)
               Gosub Drawsquare.10
-              Gosub 4005
+              Gosub Drawdisplayedwalls.4005
 4346  Next yPos,xPos
       Goto 5045
 4370  Color= colours(9)
@@ -892,7 +923,7 @@
           For yPos = 1 To 13
               Gosub Convertposition.11
               moveDown =(mazeContents >= 0) -(mazeContents < 0)
-              Gosub 4005
+              Gosub Drawdisplayedwalls.4005
               If Abs(mazeContents) = 6 Then Gosub Drawsquare.10
               maze(mazeIndex) = moveDown * maze(mazeIndex)
 4425  Next yPos,xPos
@@ -903,13 +934,18 @@
 4440  Print "an invisibility potion!";
       invisible = 16
       Goto 5050
-4510  xScreen = xScreen - 3 * xMove
+4510  # ****************************************************************************************************
+      #
+      #                                        Bumped into monster
+      #
+      # ****************************************************************************************************
+      xScreen = xScreen - 3 * xMove
       yScreen = yScreen - 3 * yMove
       mx = xScreen
       my = yScreen
       Color= colours(8)
       Gosub Drawsquare.10
-      mp = 1
+      monsterInPlay = 1
       tx = xPos
       ty = yPos
 4521  mstr = 15 + Rnd(10) + level * 20
@@ -932,8 +968,8 @@
       yScreen = my
       Gosub Drawsquare.10
       Gosub Convertposition.11
-      mp = 0
-      Goto 2130
+      monsterInPlay = 0
+      Goto Checkmoveresult.2130
 4560  xScreen = mx
       yScreen = my
       For i = 1 To 6
@@ -1009,7 +1045,7 @@
       If mazeContents And level = 2 And Not dwarfDead And Rnd(15) > partySize Then 4741
 4731  Print
       Print "the ";a$;" were all killed."
-      mp = 0
+      monsterInPlay = 0
       Goto 3750
 4740  elfDead = 1
       Print
@@ -1027,9 +1063,12 @@
       Print "the magic sword killed the ";a$
       Color= colours(5)
       Gosub Drawsquare.10
-      mp = 0
+      monsterInPlay = 0
       Goto 3750
-4800  Call - 936
+4800  # ****************************************************************************************************
+      #                                Bumped into necromancer/pterodactyl
+      # ****************************************************************************************************
+      Call - 936
       If Rnd(2) Then 4801
       Print "you disturbed an evil necromancer who sent you here."
       Goto 4802
@@ -1047,8 +1086,11 @@
 4805  level = Rnd(3)
       Gosub Findemptyslot.12
       Gosub 4150
-      Goto 2130
-4910  Call - 936
+      Goto Checkmoveresult.2130
+4910  # ****************************************************************************************************
+      #                                        Bumped into pit trap
+      # ****************************************************************************************************
+      Call - 936
       Print
       Poke 50,127
       Tab 14
@@ -1076,7 +1118,10 @@
       Print i;" of your men fell into the bottomless"
 4951  Print "pit. there are only ";partySize;" of you left.";
       Goto Getcommand.1501
-5000  Poke 0,15
+5000  # ****************************************************************************************************
+      #                              Bumped into solid wall, sfx and recheck.
+      # ****************************************************************************************************
+      Poke 0,15
       Poke 24,2
       Call 2
       Goto 2100
@@ -1096,7 +1141,7 @@
 6000  # ****************************************************************************************************
       #                                           Exit the Maze
       # ****************************************************************************************************
-      If Not(level = 3 And(xPos = xExit Or xPos = xExit + 1) And(yPos = yExit Or yPos = yExit + 1)) Then 5000
+      If Not(level = 3 And(xPos = xExit Or xPos = xExit + 1) And(yPos = yExit Or yPos = yExit + 1)) Then Movefail.5000
       maze(1) = 10
       maze(2) = 3
       maze(3) = 10
@@ -1125,7 +1170,7 @@
 7000  # ****************************************************************************************************
       #                                            Move Dragon
       # ****************************************************************************************************
-      t = level * 169 + sx + 13 *(sy - 1)
+      t = level * 169 + xBoss + 13 *(yBoss - 1)
       moveRight =(Abs(maze(t) Mod 2) = 0)
       moveLeft =(Abs(maze(t - 1) Mod 2) = 0)
       moveDown =(Abs(maze(t) Mod 10) < 2)
@@ -1133,15 +1178,15 @@
       moveUp = 0
       If level = 0 And yPos = 1 Then 7005
 7002  moveUp =(Abs(maze(t - 13) Mod 10) < 2)
-7005  xMove =(xPos > sx) * moveRight -(xPos < sx) * moveLeft
-      yMove =(yPos > sy) * moveDown -(yPos < sy) * moveUp
+7005  xMove =(xPos > xBoss) * moveRight -(xPos < xBoss) * moveLeft
+      yMove =(yPos > yBoss) * moveDown -(yPos < yBoss) * moveUp
       i = Rnd(2)
       If xMove # 0 Or yMove # 0 Then 7018
       xMove = moveRight - moveLeft
       yMove = moveDown - moveUp
       If ct < 4 Then 7018
-7015  xMove = Sgn(xPos - sx)
-      yMove = Sgn(yPos - sy)
+7015  xMove = Sgn(xPos - xBoss)
+      yMove = Sgn(yPos - yBoss)
 7018  If xMove # 0 And yMove # 0 Then xMove = xMove * i
       If xMove # 0 And yMove # 0 Then yMove = 0
       If 2 * xMove + 3 * yMove # - lm Then ct = - 1
@@ -1161,13 +1206,16 @@
       Next i
       qx = xScreen
       qy = yScreen
-      sx = sx + xMove
-      sy = sy + yMove
+      xBoss = xBoss + xMove
+      yBoss = yBoss + yMove
       xScreen = moveUp
       yScreen = moveRight
-7030  If xPos # sx Or yPos # sy Then Return
+7030  If xPos # xBoss Or yPos # yBoss Then Return
       Pop
-8000  For i = 1 To 6
+8000  # ****************************************************************************************************
+      #                                         Bumped into dragon
+      # ****************************************************************************************************
+      For i = 1 To 6
           Color= 1 +(i Mod 2) * 4
           Gosub Drawsquare.10
           For j = 1 To 8
@@ -1176,8 +1224,8 @@
               Call 2
       Next j,i
       bossStatus = 0
-      sx = - 1
-      sy = - 1
+      xBoss = - 1
+      yBoss = - 1
       a$ = "dragon"
       If wp Then 4750
 8002  If partySize <= 2 Then Alldied.8325

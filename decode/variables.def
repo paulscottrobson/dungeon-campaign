@@ -21,6 +21,9 @@ B$  {} 		monsterName$ 										# name of monsters
 DX 	{} 		xMove 												# movement.
 DY 	{} 		yMove
 V 	{} 		key 												# key pressed 
+SX( {} 		xSerpent( 											# Serpent parts
+SY( {} 		ySerpent( 											
+V1 	{}		isJumping 											# non zero if jumping 
 
 M( 	{} 		maze( 												# Maze contents
 
@@ -42,6 +45,7 @@ U 	{} 		moveUp
 WX 	{} 		xExit 												# exit position level 4
 WY 	{} 		yExit 						
 DC 	{} 		dragonMoveCount 									# time to move dragon (?)
-SX( {} 		xSerpent( 											# Serpent parts
-SY( {} 		ySerpent( 											
-V1 	{}		isJumping 											# non zero if jumping 
+MP 	{} 		monsterInPlay 										# non zero if monster in play
+SX 	{} 		xBoss 												# boss x position
+SY  {}		yBoss
+CR  {} 		gasTimeOut 											# counter for gas response
