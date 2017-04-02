@@ -97,20 +97,23 @@
       Pop
       Goto Prompt.1500
   40  # ****************************************************************************************************
-      #                                          Move the serpent
+      #              Move the serpent. info = direction. Pick a move in one of the directions
       # ****************************************************************************************************
       m = 1
       i = Rnd(2)
-      xBoss = xSerpent(1) + xBossScreen * i
-      yBoss = ySerpent(1) + yBossScreen *(i = 0)
-  41  If xBoss < 1 Or yBoss < 1 Or xBoss > 38 Or yBoss > 38 Then 60
-  42  n = Scrn(xBoss,yBoss)
+      xBoss = xSerpent(1) + xBossInfo * i
+      yBoss = ySerpent(1) + yBossInfo *(i = 0)
+  41  # if off screen try other direction
+      If xBoss < 1 Or yBoss < 1 Or xBoss > 38 Or yBoss > 38 Then 60
+  42  # check head got player (5), check wall and gas (9)
+      n = Scrn(xBoss,yBoss)
       If n = colours(5) Then 50
       If n = colours(level + 1) Mod 16 Or n = colours(9) Then 60
       m = 1
       u = Scrn(xSerpent(8),ySerpent(8))
       Color= u +(8 *(u # 0))
-  45  Plot xSerpent(8),ySerpent(8)
+  45  # move serpent graphic, clear tail, move others down one.
+      Plot xSerpent(8),ySerpent(8)
       Color= 8 +(n *(n # 8))
       Plot xBoss,yBoss
       For i = 8 To 1 Step - 1
@@ -118,13 +121,15 @@
           ySerpent(i) = ySerpent(i - 1)
       Next i
       Return
-  47  m = 1
-      xBossScreen =(xBoss = 1) -(xBoss = 38)
-      yBossScreen =(yBoss = 1) -(yBoss = 38)
-      If xBossScreen = 0 Then xBossScreen = 2 * Rnd(2) - 1
-      If yBossScreen = 0 Then yBossScreen = 2 * Rnd(2) - 1
+  47  # come here if trying other way fails.
+      m = 1
+      xBossInfo =(xBoss = 1) -(xBoss = 38)
+      yBossInfo =(yBoss = 1) -(yBoss = 38)
+      If xBossInfo = 0 Then xBossInfo = 2 * Rnd(2) - 1
+      If yBossInfo = 0 Then yBossInfo = 2 * Rnd(2) - 1
       Goto Moveserpent.40
-  50  Color= 8
+  50  # serpent ate a party member
+      Color= 8
       Plot xBoss,yBoss
       Gosub Delaysec.6
       Call - 936
@@ -132,7 +137,8 @@
       Print " the serpent ate one of your party!"
       Color= 0
       Gosub Delayhalfsec.7
-  55  Plot xBoss,yBoss
+  55  # erase the serpent. (Doesn't check if party zero size)
+      Plot xBoss,yBoss
       For i = 1 To 8
           Plot xSerpent(i),ySerpent(i)
           For j = 1 To 200
@@ -141,9 +147,10 @@
       partySize = partySize - 1
       Pop
       Goto 3750
-  60  If m = 0 Then 47
-      xBoss = xBoss - xBossScreen * i + xBossScreen *(i = 0)
-      yBoss = yBoss - yBossScreen *(i = 0) + yBossScreen * i
+  60  # trying a direction fails ; try the other one ; if already done that (m = 0) pick a random direction.
+      If m = 0 Then 47
+      xBoss = xBoss - xBossInfo * i + xBossInfo *(i = 0)
+      yBoss = yBoss - yBossInfo *(i = 0) + yBossInfo * i
       m = 0
       Goto 41
  500  # ****************************************************************************************************
@@ -153,8 +160,8 @@
       u = 625
       Gosub Drawerasespectre.600
       u = 620
-      xBossScreen = xBossScreen + Sgn(xScreen - xBossScreen) -(yScreen = yBossScreen)
-      yBossScreen = yBossScreen + Sgn(yScreen - yBossScreen) -(xScreen = xBossScreen)
+      xBossInfo = xBossInfo + Sgn(xScreen - xBossInfo) -(yScreen = yBossInfo)
+      yBossInfo = yBossInfo + Sgn(yScreen - yBossInfo) -(xScreen = xBossInfo)
       Gosub Drawerasespectre.600
       If d = 1 Then Spectregotparty.700
       dragonMoveCount = 0
@@ -163,17 +170,17 @@
       #                                          Draw the Spectre
       # ****************************************************************************************************
       For i = - 1 To 2
-          l = yBossScreen
-          r = xBossScreen + i
+          l = yBossInfo
+          r = xBossInfo + i
           Gosub u
-          l = yBossScreen + 1
+          l = yBossInfo + 1
           Gosub u
       Next i
       For i = 0 To 1
-          l = yBossScreen - 1
-          r = xBossScreen + i
+          l = yBossInfo - 1
+          r = xBossInfo + i
           Gosub u
-          l = yBossScreen + 2
+          l = yBossInfo + 2
           Gosub u
       Next i
       Return
@@ -201,14 +208,14 @@
       u = 620
       Gosub Drawerasespectre.600
       Color= colours(5)
-      If Scrn(xBossScreen,yBossScreen) = colours(16) Then Plot xBossScreen,yBossScreen
+      If Scrn(xBossInfo,yBossInfo) = colours(16) Then Plot xBossInfo,yBossInfo
       Color= colours(16)
-      If Scrn(xBossScreen + 1,yBossScreen) = colours(5) Then Plot xBossScreen + 1,yBossScreen
+      If Scrn(xBossInfo + 1,yBossInfo) = colours(5) Then Plot xBossInfo + 1,yBossInfo
       u = 625
       Gosub Drawerasespectre.600
- 707  xBossScreen = xBossScreen - 1
-      If xBossScreen > 1 Then Removespectre.705
-      Plot xBossScreen + 1,yBossScreen
+ 707  xBossInfo = xBossInfo - 1
+      If xBossInfo > 1 Then Removespectre.705
+      Plot xBossInfo + 1,yBossInfo
       partySize = partySize - 1
       Pop
       Goto 3750
@@ -557,7 +564,7 @@
       # ****************************************************************************************************
       Gosub Drawdisplayedwalls.4005
       If bossStatus = 1 Then dragonMoveCount = dragonMoveCount + 1
-      If monsterInPlay # 0 Then 4550
+      If monsterInPlay # 0 Then Attackmonster.4550
       If Not isJumping Then Checkmoveresult.2130
       isJumping = 0
       Goto Executecommand.1520
@@ -807,8 +814,8 @@
       If level = 2 Then Createserpent.4256
       bossStatus = 2
       u = 620
-      xBossScreen = 36
-      yBossScreen = 36
+      xBossInfo = 36
+      yBossInfo = 36
       Gosub Drawerasespectre.600
       Poke 50,63
       Call - 936
@@ -825,12 +832,12 @@
       Poke 50,255
       Goto Exitbossmonster.4259
 4256  # ****************************************************************************************************
-      #                                           Create Serpent
+      #                           Create Serpent. Find empty slot, assign to [8]
       # ****************************************************************************************************
       u = xPos
       d = yPos
-      xBossScreen = 1
-      yBossScreen = 1
+      xBossInfo = 1
+      yBossInfo = 1
       Gosub Findemptyslot.12
       bossStatus = 3
       Color= 8
@@ -838,12 +845,14 @@
       xSerpent(8) = xScreen
       ySerpent(8) = yScreen
       For i = 8 To 2 Step - 1
-4257      yMove = 0
+4257  # for each segment find a move that's open and store that in [7]-[1]
+          yMove = 0
           xMove = Rnd(3) - 1
           If xMove = 0 Then yMove = 2 * Rnd(2) - 1
           If Scrn(xSerpent(i) + xMove,ySerpent(i) + yMove) = colours(level + 1) Mod 16 Then 4257
           xSerpent(i - 1) = xSerpent(i) + xMove
-4258      ySerpent(i - 1) = ySerpent(i) + yMove
+4258  # draw it, announce it, fix up variables with player.
+          ySerpent(i - 1) = ySerpent(i) + yMove
           Plot xSerpent(i - 1),ySerpent(i - 1)
           For j = 1 To 100
       Next j,i
@@ -860,19 +869,19 @@
       #                                           Create Dragon
       # ****************************************************************************************************
       bossStatus = 1
-      xBossScreen = xPos
-      yBossScreen = yPos
+      xBossInfo = xPos
+      yBossInfo = yPos
 4265  # Find empty slot for dragon, at least six squares away. Fix back and update player pos
       Gosub Findemptyslot.12
-      If Abs(xPos - xBossScreen) + Abs(yPos - yBossScreen) < 6 Then 4265
+      If Abs(xPos - xBossInfo) + Abs(yPos - yBossInfo) < 6 Then 4265
       Color= colours(14)
       Gosub Drawsquare.10
       xBoss = xPos
       yBoss = yPos
-      xPos = xBossScreen
-      yPos = yBossScreen
-      xBossScreen = xScreen
-      yBossScreen = yScreen
+      xPos = xBossInfo
+      yPos = yBossInfo
+      xBossInfo = xScreen
+      yBossInfo = yScreen
       Gosub Convertposition.11
 4267  # announce warning message
       Call - 936
@@ -989,37 +998,43 @@
       # ****************************************************************************************************
       xScreen = xScreen - 3 * xMove
       yScreen = yScreen - 3 * yMove
-      mx = xScreen
-      my = yScreen
+      xMonster = xScreen
+      yMonster = yScreen
       Color= colours(8)
       Gosub Drawsquare.10
       monsterInPlay = 1
       tx = xPos
       ty = yPos
-4521  mstr = 15 + Rnd(10) + level * 20
+4521  # work out strength and type of monster
+      monStrength = 15 + Rnd(10) + level * 20
       i = Rnd(20) * 12 + 1
       a$ = monsterName$(i,i + 11)
       Call - 936
       Print "you've come upon ";Rnd(19) + 5;" ";a$
 4522  Gosub Convertposition.11
-      Print "their strength is ";mstr;" while yours"
+      Print "their strength is ";monStrength;" while yours"
       Print "is ";partySize * strength;". what is your command?"
       Goto Getcommand.1501
-4550  If xScreen = mx And yScreen = my And invisible # 15 Then 4710
-      If(xScreen = mx Or yScreen = my) And invisible # 15 Then 4560
+4550  # ****************************************************************************************************
+      #
+      #                                        Now in monster fight
+      #
+      # ****************************************************************************************************
+      If xScreen = xMonster And yScreen = yMonster And invisible # 15 Then 4710
+      If(xScreen = xMonster Or yScreen = yMonster) And invisible # 15 Then 4560
 4555  Color= colours(8)
       xScreen = 3 * tx - 2
       yScreen = 3 * ty - 2
       Gosub Drawsquare.10
       Color= 0
-      xScreen = mx
-      yScreen = my
+      xScreen = xMonster
+      yScreen = yMonster
       Gosub Drawsquare.10
       Gosub Convertposition.11
       monsterInPlay = 0
       Goto Checkmoveresult.2130
-4560  xScreen = mx
-      yScreen = my
+4560  xScreen = xMonster
+      yScreen = yMonster
       For i = 1 To 6
           Color= 0
           Gosub Drawsquare.10
@@ -1061,7 +1076,7 @@
 4716  i = Rnd(10) + 1
       Print i
       If Peek(- 16384) < 128 Then 4716
-      l =(partySize * strength * i) > mstr * 3
+      l =(partySize * strength * i) > monStrength * 3
       Poke - 16368,0
 4718  Print "you rolled ";i;"."
       If l Then Print "you got a hit!"
@@ -1083,7 +1098,7 @@
       c$ = "none"
       If j Then c$ = "half"
       Print c$;" of the ";a$;" are dead."
-4724  If mazeContents > 3 Then mstr = mstr / 2
+4724  If mazeContents > 3 Then monStrength = monStrength / 2
 4725  Print "roll again for your side.";
       Gosub Readkeyboardgascheck.18
       Goto 4716
@@ -1106,7 +1121,7 @@
       Gosub Delaytwosec.5
       Goto 4731
 4750  magicSword = 0
-      strength = strength + mstr / partySize
+      strength = strength + monStrength / partySize
       Print
       Print "the magic sword killed the ";a$
       Color= colours(5)
@@ -1257,8 +1272,8 @@
       u = xScreen
       r = yScreen
 7020  # animate the move
-      xScreen = xBossScreen
-      yScreen = yBossScreen
+      xScreen = xBossInfo
+      yScreen = yBossInfo
       For i = 1 To 3
           Color= 0
           Gosub Drawsquare.10
@@ -1267,8 +1282,8 @@
           yScreen = yScreen + yMove
           Gosub Drawsquare.10
       Next i
-      xBossScreen = xScreen
-      yBossScreen = yScreen
+      xBossInfo = xScreen
+      yBossInfo = yScreen
       xBoss = xBoss + xMove
       yBoss = yBoss + yMove
       xScreen = u

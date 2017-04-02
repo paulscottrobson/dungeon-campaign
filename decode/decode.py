@@ -204,7 +204,6 @@ class LineComments:
 		coms = [x.strip().replace("\t"," ") for x in coms if x.strip() != ""]
 		self.comments = {}		
 		for c in coms:
-			print(c)
 			#print(c)
 			mc = re.match("^\\s*(\\d+)\\s*\\{(.*)\\}\\s*(.*)$",c)
 			assert mc is not None,"Bad comment line "+c

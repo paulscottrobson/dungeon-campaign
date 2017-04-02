@@ -1,7 +1,6 @@
 #
 #	Comments file
 #
-
 1	{start} **__Dungeon Campaign by Robert Clardy. Reverse engineered by Paul Robson 2017
 5   {delaytwosec} * Delay two seconds
 6   {delaysec} * Delay a second
@@ -17,7 +16,14 @@
 20  {noKey}No check for gas if there is none and not the serpent boss, move serpent ? back if count not mod =0
 25  {} dec gas count , loop back if not time out or counter not mod 0
 30  {} one of the party dies, back to prompt.
-40  {moveSerpent} *Move the serpent
+40  {moveSerpent} *Move the serpent. info = direction. Pick a move in one of the directions
+41  {} if off screen try other direction
+42  {} check head got player (5), check wall and gas (9)
+45  {} move serpent graphic, clear tail, move others down one.
+47  {} come here if trying other way fails.
+50  {} serpent ate a party member
+55  {} erase the serpent. (Doesn't check if party zero size)
+60  {} trying a direction fails ; try the other one ; if already done that (m = 0) pick a random direction.
 500 {moveSpectre} *Move the Spectre. Just floats about chasing you.
 600 {drawEraseSpectre} *Draw the Spectre
 620 {drawSpectreRoutine} *Draw Spectre check for player.
@@ -100,7 +106,9 @@
 4220 {} draw exit if required.
 4250 {checkBossMonster} *_Check for boss monster / Create Spectre
 4255 {} *Display Information
-4256 {createSerpent} *Create Serpent
+4256 {createSerpent} *Create Serpent. Find empty slot, assign to [8]
+4257 {} for each segment find a move that's open and store that in [7]-[1]
+4258 {} draw it, announce it, fix up variables with player.
 4259 {exitBossMonster} exit boss monster creation
 4260 {createDragon} *Create Dragon
 4265 {} Find empty slot for dragon, at least six squares away. Fix back and update player pos
@@ -117,6 +125,9 @@
 4410 {} magic sword
 4420 {} show current level
 4510 {foundMonster} *_Bumped into monster
+4521 {} work out strength and type of monster
+4522 {} continue announcements
+4550 {attackMonster} *_Now in monster fight
 4800 {necroPtero} *Bumped into necromancer/pterodactyl
 4801 {} alternate message, there's no other difference.
 4802 {} play a little tune
@@ -148,11 +159,7 @@
 
 
 # TODO:
-# 40-60 		Serpent Move code
-# 500-707 		Spectre Move code
-# 780-785 		Machine code music playing (disassemble)
-# 4256-4259 	Create Serpent
-# 4510-4750 	Battle
+# 4550-4750 	Battle
 
 
 

@@ -52,5 +52,8 @@ SY  {}		yBoss
 CR  {} 		gasTimeOut 											# counter for gas response
 CT  {} 		countChange 										# count to change direction
 LM  {} 		lastDragonMove
-QX 	{} 		xBossScreen
-QY  {} 		yBossScreen
+QX 	{} 		xBossInfo
+QY  {} 		yBossInfo
+MX 	{} 		xMonster
+MY 	{} 		yMonster
+MSTR {}  	monStrength
