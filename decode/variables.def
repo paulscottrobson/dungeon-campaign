@@ -24,6 +24,7 @@ V 	{} 		key 												# key pressed
 SX( {} 		xSerpent( 											# Serpent parts
 SY( {} 		ySerpent( 											
 V1 	{}		isJumping 											# non zero if jumping 
+WP  {} 		magicSword 											# non zero if has magic sword 
 
 M( 	{} 		maze( 												# Maze contents
 
@@ -38,10 +39,10 @@ C(	{2-9999} 		colours( 											# Colour codes
 
 GS 	{} 		gasTime 											# Gas exposure time remaining
 RT 	{} 		noGas 												# set to non-zero when not in gas.
-R 	{} 		moveRight 											# can move right
-D 	{} 		moveDown
-L 	{} 		moveLeft
-U 	{} 		moveUp
+R 	{} 		r 		 											# can move right
+D 	{} 		d
+L 	{} 		l
+U 	{} 		u
 WX 	{} 		xExit 												# exit position level 4
 WY 	{} 		yExit 						
 DC 	{} 		dragonMoveCount 									# time to move dragon (?)
