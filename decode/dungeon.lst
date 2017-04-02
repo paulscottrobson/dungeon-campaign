@@ -631,12 +631,15 @@
       # ****************************************************************************************************
       bx = 2 * Rnd(2) - 1
       by = 2 * Rnd(2) - 1
-3760  i = Rnd(2)
+3760  # only horizontal or vertical
+      i = Rnd(2)
       xMove = bx *(i = 0)
       yMove = by * i
-3765  If(xPos = 13 And xMove = 1) Or(yPos = 13 And yMove = 1) Or(xPos = 1 And xMove = - 1) Or(yPos = 1 And yMove = - 1) Then Flyoncarpet.3755
+3765  # reached a wall, change direction
+      If(xPos = 13 And xMove = 1) Or(yPos = 13 And yMove = 1) Or(xPos = 1 And xMove = - 1) Or(yPos = 1 And yMove = - 1) Then Flyoncarpet.3755
       If(Abs(maze(mazeIndex + xMove + 13 * yMove)) / 10) = 6 Then Flyoncarpet.3755
-3770  If i Then 3780
+3770  # animate the movement vertically
+      If i Then 3780
       For i = 1 To 3
           Color= Scrn(xScreen + xMove +(xMove = 1),yScreen) + colours(5)
           Vlin yScreen,yScreen + 1 At xScreen + xMove +(xMove = 1)
@@ -645,14 +648,16 @@
           xScreen = xScreen + xMove
       Next i
       xPos = xPos + xMove
-3775  Gosub Convertposition.11
+3775  # update map/pos , keep going until key pressed, go to monster if monster was in play
+      Gosub Convertposition.11
       Gosub Drawdisplayedwalls.4005
       If Peek(- 16384) < 128 Then 3760
       Poke - 16368,0
       hasCarpet = 0
       If monsterInPlay Then 4555
       Goto Checkmoveresult.2130
-3780  For i = 1 To 3
+3780  # animate the movement horizontally
+      For i = 1 To 3
           Color= Scrn(xScreen,yScreen + yMove +(yMove = 1)) + colours(5)
           Hlin xScreen,xScreen + 1 At yScreen + yMove +(yMove = 1)
 3781      Color= 16 + Scrn(xScreen,yScreen +(yMove # 1)) - colours(5)
@@ -711,20 +716,24 @@
       noGas = 1
       a$ = "down"
       If j Then a$ = "up"
-4115  If j = 0 And level < 3 Then maze(mazeIndex + 169) = Abs(maze(mazeIndex + 169))
+4115  # open up either up or down space.
+      If j = 0 And level < 3 Then maze(mazeIndex + 169) = Abs(maze(mazeIndex + 169))
       If j And level Then maze(mazeIndex - 169) = Abs(maze(mazeIndex - 169))
-4120  Call - 936
+4120  # ask if using stairs
+      Call - 936
       Print
       Tab 7
       Print "stairway. go ";a$;" it(y/n)?"
-4130  Gosub Readkeyboardgascheck.18
+4130  # if yes, little tune
+      Gosub Readkeyboardgascheck.18
       If key # 217 Then 2145
       level = level - j +(j = 0)
       For i = j * 8 + 8 To(j = 0) * 8 + 8 Step((j = 0) - j)
           Poke 0,i
           Poke 24,2
           Call 2
-4145      For mazeContents = 1 To 70
+4145  # update values & enter new level
+          For mazeContents = 1 To 70
       Next mazeContents,i
       Gosub Convertposition.11
       Call - 936

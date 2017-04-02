@@ -21,8 +21,7 @@
 500 {moveSpectre} *Move the Spectre
 769 {initialise} *_Initialise Game
 770 {} display title page (poke 50,63 is inverse poke 50,127 is normal)
-780 {} *install machine code to play beeps etc.
-
+780 {} *install machine code for sound see sound.asm and music.ods
 801 {createMaze} *_Create the maze
 802 {} *dimension 13x13x4 maze and fill with '3' (wall right and below)
 1001 {} *Do for each level.
@@ -70,6 +69,11 @@
 3700 {jump} *Jump Hazard
 3740 {displayStatus} *Display Status
 3755 {flyOnCarpet} * Fly on Magic Carpet
+3760 {} only horizontal or vertical
+3765 {} reached a wall, change direction
+3770 {} animate the movement vertically
+3775 {} update map/pos , keep going until key pressed, go to monster if monster was in play
+3780 {} animate the movement horizontally
 3900 {takeInvisibilityPotion} *Take invisibility potion
 4000 {eraseDisplayedWalls} *Erase displayed walls unless below visible
 4002 {hideAndDraw} *Hide current square as first time, draw it.
@@ -81,6 +85,10 @@
 4030 {} horizontal wall square above
 4040 {} horizontal wall this square
 4110 {stairsHandler} *Handle Stairs
+4115 {} open up either up or down space.
+4120 {} ask if using stairs
+4130 {} if yes, little tune
+4145 {} update values & enter new level
 4150 {enterNewLevel} *Enter a new level, reset evrything
 4160 {} draw the frame
 4170 {} redraw the bits we've already seen.
@@ -129,10 +137,9 @@
 # 40-60 		Serpent Move code
 # 500-707 		Spectre Move code
 # 780-785 		Machine code music playing (disassemble)
-# 3755-3781 	Carpet Code
-# 4100-4145 	Stairway code 
 # 4255-4270 	Boss creation (x3)
 # 4510-4750 	Battle
-# 7000-8002 	Move Dragon
+# 7000-8002 	Dragon Move code
+
 
 
