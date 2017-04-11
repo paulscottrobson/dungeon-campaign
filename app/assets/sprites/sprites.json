@@ -1,217 +1,231 @@
 {
     "frames":{
         "balrog": {
-            "frame":{ "x":100,"y":0,"w":32,"h":32 },
+            "frame":{ "x":212,"y":0,"w":32,"h":32 },
             "rotated":false,
             "trimmed":false,
             "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
             "sourceSize":{ "w":32,"h":32 }
         },
         "goblin": {
-            "frame":{ "x":136,"y":0,"w":32,"h":32 },
+            "frame":{ "x":132,"y":72,"w":32,"h":32 },
             "rotated":false,
             "trimmed":false,
             "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
             "sourceSize":{ "w":32,"h":32 }
         },
         "gold": {
-            "frame":{ "x":172,"y":0,"w":32,"h":32 },
+            "frame":{ "x":168,"y":72,"w":32,"h":32 },
             "rotated":false,
             "trimmed":false,
             "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
             "sourceSize":{ "w":32,"h":32 }
         },
         "stairsu": {
-            "frame":{ "x":208,"y":0,"w":32,"h":32 },
+            "frame":{ "x":204,"y":72,"w":32,"h":32 },
             "rotated":false,
             "trimmed":false,
             "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
             "sourceSize":{ "w":32,"h":32 }
         },
         "cyclops": {
-            "frame":{ "x":0,"y":20,"w":32,"h":32 },
+            "frame":{ "x":132,"y":108,"w":32,"h":32 },
             "rotated":false,
             "trimmed":false,
             "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
             "sourceSize":{ "w":32,"h":32 }
         },
         "gargoyle": {
-            "frame":{ "x":36,"y":20,"w":32,"h":32 },
+            "frame":{ "x":168,"y":108,"w":32,"h":32 },
             "rotated":false,
             "trimmed":false,
             "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
             "sourceSize":{ "w":32,"h":32 }
         },
+        "bgrtile": {
+            "frame":{ "x":0,"y":0,"w":128,"h":128 },
+            "rotated":false,
+            "trimmed":false,
+            "spriteSourceSize":{ "x":0,"y":0,"w":128,"h":128 },
+            "sourceSize":{ "w":128,"h":128 }
+        },
         "stairsd": {
-            "frame":{ "x":72,"y":36,"w":32,"h":32 },
+            "frame":{ "x":204,"y":108,"w":32,"h":32 },
             "rotated":false,
             "trimmed":false,
             "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
             "sourceSize":{ "w":32,"h":32 }
         },
         "treasure": {
-            "frame":{ "x":108,"y":36,"w":32,"h":32 },
+            "frame":{ "x":0,"y":132,"w":32,"h":32 },
             "rotated":false,
             "trimmed":false,
             "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
             "sourceSize":{ "w":32,"h":32 }
         },
         "lycanthrope": {
-            "frame":{ "x":144,"y":36,"w":32,"h":32 },
+            "frame":{ "x":36,"y":132,"w":32,"h":32 },
             "rotated":false,
             "trimmed":false,
             "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
             "sourceSize":{ "w":32,"h":32 }
         },
         "rock": {
-            "frame":{ "x":180,"y":36,"w":32,"h":32 },
+            "frame":{ "x":72,"y":132,"w":32,"h":32 },
             "rotated":false,
             "trimmed":false,
             "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
             "sourceSize":{ "w":32,"h":32 }
         },
         "gas": {
-            "frame":{ "x":216,"y":36,"w":32,"h":32 },
-            "rotated":false,
-            "trimmed":false,
-            "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
-            "sourceSize":{ "w":32,"h":32 }
-        },
-        "minotaur": {
-            "frame":{ "x":0,"y":56,"w":32,"h":32 },
-            "rotated":false,
-            "trimmed":false,
-            "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
-            "sourceSize":{ "w":32,"h":32 }
-        },
-        "werewolf": {
-            "frame":{ "x":36,"y":56,"w":32,"h":32 },
-            "rotated":false,
-            "trimmed":false,
-            "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
-            "sourceSize":{ "w":32,"h":32 }
-        },
-        "centaur": {
-            "frame":{ "x":72,"y":72,"w":32,"h":32 },
-            "rotated":false,
-            "trimmed":false,
-            "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
-            "sourceSize":{ "w":32,"h":32 }
-        },
-        "wall": {
-            "frame":{ "x":0,"y":0,"w":96,"h":16 },
-            "rotated":false,
-            "trimmed":false,
-            "spriteSourceSize":{ "x":0,"y":0,"w":96,"h":16 },
-            "sourceSize":{ "w":96,"h":16 }
-        },
-        "pit": {
-            "frame":{ "x":108,"y":72,"w":32,"h":32 },
-            "rotated":false,
-            "trimmed":false,
-            "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
-            "sourceSize":{ "w":32,"h":32 }
-        },
-        "skeleton": {
-            "frame":{ "x":144,"y":72,"w":32,"h":32 },
-            "rotated":false,
-            "trimmed":false,
-            "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
-            "sourceSize":{ "w":32,"h":32 }
-        },
-        "mazefloor": {
-            "frame":{ "x":180,"y":72,"w":32,"h":32 },
-            "rotated":false,
-            "trimmed":false,
-            "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
-            "sourceSize":{ "w":32,"h":32 }
-        },
-        "mummy": {
-            "frame":{ "x":216,"y":72,"w":32,"h":32 },
-            "rotated":false,
-            "trimmed":false,
-            "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
-            "sourceSize":{ "w":32,"h":32 }
-        },
-        "dragon": {
-            "frame":{ "x":0,"y":92,"w":32,"h":32 },
-            "rotated":false,
-            "trimmed":false,
-            "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
-            "sourceSize":{ "w":32,"h":32 }
-        },
-        "spectre": {
-            "frame":{ "x":36,"y":92,"w":32,"h":32 },
-            "rotated":false,
-            "trimmed":false,
-            "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
-            "sourceSize":{ "w":32,"h":32 }
-        },
-        "player": {
-            "frame":{ "x":72,"y":108,"w":32,"h":32 },
-            "rotated":false,
-            "trimmed":false,
-            "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
-            "sourceSize":{ "w":32,"h":32 }
-        },
-        "berserker": {
-            "frame":{ "x":108,"y":108,"w":32,"h":32 },
-            "rotated":false,
-            "trimmed":false,
-            "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
-            "sourceSize":{ "w":32,"h":32 }
-        },
-        "vampire": {
-            "frame":{ "x":144,"y":108,"w":32,"h":32 },
-            "rotated":false,
-            "trimmed":false,
-            "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
-            "sourceSize":{ "w":32,"h":32 }
-        },
-        "troll": {
-            "frame":{ "x":180,"y":108,"w":32,"h":32 },
-            "rotated":false,
-            "trimmed":false,
-            "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
-            "sourceSize":{ "w":32,"h":32 }
-        },
-        "zombie": {
-            "frame":{ "x":216,"y":108,"w":32,"h":32 },
-            "rotated":false,
-            "trimmed":false,
-            "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
-            "sourceSize":{ "w":32,"h":32 }
-        },
-        "carpet": {
-            "frame":{ "x":0,"y":128,"w":32,"h":32 },
-            "rotated":false,
-            "trimmed":false,
-            "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
-            "sourceSize":{ "w":32,"h":32 }
-        },
-        "exit": {
-            "frame":{ "x":36,"y":128,"w":32,"h":32 },
-            "rotated":false,
-            "trimmed":false,
-            "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
-            "sourceSize":{ "w":32,"h":32 }
-        },
-        "spider": {
-            "frame":{ "x":72,"y":144,"w":32,"h":32 },
-            "rotated":false,
-            "trimmed":false,
-            "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
-            "sourceSize":{ "w":32,"h":32 }
-        },
-        "ogre": {
             "frame":{ "x":108,"y":144,"w":32,"h":32 },
             "rotated":false,
             "trimmed":false,
             "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
             "sourceSize":{ "w":32,"h":32 }
         },
-        "serpent": {
+        "minotaur": {
             "frame":{ "x":144,"y":144,"w":32,"h":32 },
+            "rotated":false,
+            "trimmed":false,
+            "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
+            "sourceSize":{ "w":32,"h":32 }
+        },
+        "rectangle": {
+            "frame":{ "x":132,"y":0,"w":76,"h":51 },
+            "rotated":false,
+            "trimmed":false,
+            "spriteSourceSize":{ "x":0,"y":0,"w":76,"h":51 },
+            "sourceSize":{ "w":76,"h":51 }
+        },
+        "werewolf": {
+            "frame":{ "x":180,"y":144,"w":32,"h":32 },
+            "rotated":false,
+            "trimmed":false,
+            "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
+            "sourceSize":{ "w":32,"h":32 }
+        },
+        "centaur": {
+            "frame":{ "x":216,"y":144,"w":32,"h":32 },
+            "rotated":false,
+            "trimmed":false,
+            "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
+            "sourceSize":{ "w":32,"h":32 }
+        },
+        "wall": {
+            "frame":{ "x":132,"y":52,"w":96,"h":16 },
+            "rotated":false,
+            "trimmed":false,
+            "spriteSourceSize":{ "x":0,"y":0,"w":96,"h":16 },
+            "sourceSize":{ "w":96,"h":16 }
+        },
+        "pit": {
+            "frame":{ "x":0,"y":168,"w":32,"h":32 },
+            "rotated":false,
+            "trimmed":false,
+            "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
+            "sourceSize":{ "w":32,"h":32 }
+        },
+        "skeleton": {
+            "frame":{ "x":36,"y":168,"w":32,"h":32 },
+            "rotated":false,
+            "trimmed":false,
+            "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
+            "sourceSize":{ "w":32,"h":32 }
+        },
+        "mazefloor": {
+            "frame":{ "x":72,"y":168,"w":32,"h":32 },
+            "rotated":false,
+            "trimmed":false,
+            "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
+            "sourceSize":{ "w":32,"h":32 }
+        },
+        "mummy": {
+            "frame":{ "x":108,"y":180,"w":32,"h":32 },
+            "rotated":false,
+            "trimmed":false,
+            "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
+            "sourceSize":{ "w":32,"h":32 }
+        },
+        "dragon": {
+            "frame":{ "x":144,"y":180,"w":32,"h":32 },
+            "rotated":false,
+            "trimmed":false,
+            "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
+            "sourceSize":{ "w":32,"h":32 }
+        },
+        "spectre": {
+            "frame":{ "x":180,"y":180,"w":32,"h":32 },
+            "rotated":false,
+            "trimmed":false,
+            "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
+            "sourceSize":{ "w":32,"h":32 }
+        },
+        "player": {
+            "frame":{ "x":216,"y":180,"w":32,"h":32 },
+            "rotated":false,
+            "trimmed":false,
+            "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
+            "sourceSize":{ "w":32,"h":32 }
+        },
+        "berserker": {
+            "frame":{ "x":0,"y":204,"w":32,"h":32 },
+            "rotated":false,
+            "trimmed":false,
+            "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
+            "sourceSize":{ "w":32,"h":32 }
+        },
+        "vampire": {
+            "frame":{ "x":36,"y":204,"w":32,"h":32 },
+            "rotated":false,
+            "trimmed":false,
+            "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
+            "sourceSize":{ "w":32,"h":32 }
+        },
+        "troll": {
+            "frame":{ "x":72,"y":204,"w":32,"h":32 },
+            "rotated":false,
+            "trimmed":false,
+            "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
+            "sourceSize":{ "w":32,"h":32 }
+        },
+        "zombie": {
+            "frame":{ "x":108,"y":216,"w":32,"h":32 },
+            "rotated":false,
+            "trimmed":false,
+            "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
+            "sourceSize":{ "w":32,"h":32 }
+        },
+        "carpet": {
+            "frame":{ "x":144,"y":216,"w":32,"h":32 },
+            "rotated":false,
+            "trimmed":false,
+            "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
+            "sourceSize":{ "w":32,"h":32 }
+        },
+        "exit": {
+            "frame":{ "x":180,"y":216,"w":32,"h":32 },
+            "rotated":false,
+            "trimmed":false,
+            "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
+            "sourceSize":{ "w":32,"h":32 }
+        },
+        "spider": {
+            "frame":{ "x":216,"y":216,"w":32,"h":32 },
+            "rotated":false,
+            "trimmed":false,
+            "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
+            "sourceSize":{ "w":32,"h":32 }
+        },
+        "ogre": {
+            "frame":{ "x":0,"y":240,"w":32,"h":32 },
+            "rotated":false,
+            "trimmed":false,
+            "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
+            "sourceSize":{ "w":32,"h":32 }
+        },
+        "serpent": {
+            "frame":{ "x":36,"y":240,"w":32,"h":32 },
             "rotated":false,
             "trimmed":false,
             "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
@@ -224,7 +238,7 @@
         "image":"sprites.png",
         "size":{
              "w":256,
-             "h":178
+             "h":274
          },
          "scale":1
     }

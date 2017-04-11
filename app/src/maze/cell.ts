@@ -10,7 +10,12 @@ enum CellContents {
     ROCK = 1,                               // Rock here
     STAIRSUP = 2,                           // Stairs here 
     STAIRSDOWN = 3,                         // Stairs down here
-    EXIT = 4                                // Exit here.
+    EXIT = 4,                               // Exit here.
+    TREASURE = 5,                           // Treasure here
+    MONSTER = 6,                            // Monster without treasure
+    MONSTERTREASURE = 7,                    // Monster with treasure
+    NECROMANCER = 8,                        // Necromancer or pterodactyl is here
+    PIT = 9                                 // Pit here
 }
 
 /**
@@ -51,9 +56,18 @@ class Cell {
      */
     public wallRight:boolean;               
 
+    /**
+     * Has this cell been visited by the player ?
+     * 
+     * @type {boolean}
+     * @memberOf Cell
+     */
+    public visited:boolean;
+
     constructor() {
         this.contents = CellContents.ROCK;
         this.wallDown = true;
         this.wallRight = true;
+        this.visited = false;
     }
 }

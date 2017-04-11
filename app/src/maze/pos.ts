@@ -13,4 +13,11 @@ class Pos {
     constructor(x:number = 0,y:number = 0) {
         this.x = x;this.y = y;
     }
+
+    move(dir:Direction): void {
+        if (dir == Direction.UP) { this.y--; }
+        if (dir == Direction.DOWN) { this.y++; }
+        if (dir == Direction.LEFT) { this.x--; }
+        if (dir == Direction.RIGHT) { this.x++; }
+    }
 }

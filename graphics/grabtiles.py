@@ -11,7 +11,7 @@ tiles = """
 	spectre 	111 274
 	dragon		80 114
 	treasure	1391 1462
-	stairsd		1322 406
+	stairsd		488 498
 	stairsu 	1355 496
 	pit			1581 402
 	exit		498 495

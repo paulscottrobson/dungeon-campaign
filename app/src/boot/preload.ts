@@ -1,5 +1,5 @@
 /// <reference path="../../lib/phaser.comments.d.ts"/>
-
+    
 /**
  *  Preloads all resources except those loaded in Boot for use in the preloader.
  * 
@@ -28,7 +28,7 @@ class PreloadState extends Phaser.State {
         this.game.load.atlas("sprites","assets/sprites/sprites.png",
                                        "assets/sprites/sprites.json");
         // Load the fonts
-        for (var fontName of []) {
+        for (var fontName of ["font"]) {
             this.game.load.bitmapFont(fontName,"assets/fonts/"+fontName+".png",
                                                "assets/fonts/"+fontName+".fnt");
         }
@@ -37,7 +37,7 @@ class PreloadState extends Phaser.State {
             this.game.load.audio(audioName,["assets/sounds/"+audioName+".mp3",
                                             "assets/sounds/"+audioName+".ogg"]);
         }
-        var info:any = { "difficulty":1.0, "size": 8, "levels": 4 };
+        var info:any = { "difficulty":1.0, "size": 10, "levels": 4 };
 
         // Switch to game state when load complete.        
         this.game.load.onLoadComplete.add(() => { this.game.state.start("Main",true,false,info); },this);
