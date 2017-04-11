@@ -6,6 +6,8 @@ class GameState extends Phaser.State {
     private maze:Maze;
     private rend:Renderer;
     private player:Phaser.Image;
+    private scr:TextScroller;
+    private n:number = 0;
 
     init(gameInfo:any) : void {
         this.difficulty = gameInfo.difficulty;
@@ -25,15 +27,23 @@ class GameState extends Phaser.State {
         this.rend.moveObjectTo(this.player,new Pos(6,7));
 
         var r = new TestLevelRenderer(this.game,this.maze.getLevel(0),200,200);
-        r.x = 630-r.width;r.y = 950-r.height;
+        r.x = r.y = 10; 
 
-        console.log(this.rend.x,this.rend.y);
+        var s:Status = new Status(this.game);
+        s.y = 20;s.x = this.game.width-20-s.width;
+
+        this.scr = new TextScroller(this.game,this.game.width,250);
+        this.scr.y = this.game.height - this.scr.height;
     }
+
     destroy() : void {
     }
 
     update() : void {    
         this.rend.x = -(this.player.x - this.game.width / 2);
         this.rend.y = -(this.player.y - this.game.height / 2);
+        if (++this.n % 20 == 0) this.scr.write(Math.random().toString());
     }
+
+
 }    

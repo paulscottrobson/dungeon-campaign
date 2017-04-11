@@ -11,7 +11,9 @@ var __extends = (this && this.__extends) || (function () {
 var GameState = (function (_super) {
     __extends(GameState, _super);
     function GameState() {
-        return _super !== null && _super.apply(this, arguments) || this;
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.n = 0;
+        return _this;
     }
     GameState.prototype.init = function (gameInfo) {
         this.difficulty = gameInfo.difficulty;
@@ -28,15 +30,20 @@ var GameState = (function (_super) {
         this.rend.positionObject(this.player, new Pos(2, 1));
         this.rend.moveObjectTo(this.player, new Pos(6, 7));
         var r = new TestLevelRenderer(this.game, this.maze.getLevel(0), 200, 200);
-        r.x = 630 - r.width;
-        r.y = 950 - r.height;
-        console.log(this.rend.x, this.rend.y);
+        r.x = r.y = 10;
+        var s = new Status(this.game);
+        s.y = 20;
+        s.x = this.game.width - 20 - s.width;
+        this.scr = new TextScroller(this.game, this.game.width, 250);
+        this.scr.y = this.game.height - this.scr.height;
     };
     GameState.prototype.destroy = function () {
     };
     GameState.prototype.update = function () {
         this.rend.x = -(this.player.x - this.game.width / 2);
         this.rend.y = -(this.player.y - this.game.height / 2);
+        if (++this.n % 20 == 0)
+            this.scr.write(Math.random().toString());
     };
     return GameState;
 }(Phaser.State));
@@ -100,6 +107,94 @@ var PreloadState = (function (_super) {
     };
     return PreloadState;
 }(Phaser.State));
+var Status = (function (_super) {
+    __extends(Status, _super);
+    function Status(game) {
+        var _this = this;
+        var spacing = 64;
+        var xPos = 32;
+        _this = _super.call(this, game) || this;
+        _this.level = _this.game.add.bitmapText(0, 0, "font", "level:9", 24, _this);
+        _this.level.tint = 0xFFFF00;
+        var gfx = _this.game.add.image(xPos, spacing, "sprites", "player", _this);
+        gfx.width = gfx.height = spacing;
+        gfx.anchor.setTo(0.5);
+        _this.count = _this.game.add.bitmapText(xPos * 2.2, spacing, "font", "99", 20, _this);
+        _this.count.anchor.setTo(0, 1.3);
+        _this.strength = _this.game.add.bitmapText(xPos * 2.2, spacing, "font", "9999", 20, _this);
+        _this.strength.anchor.setTo(0, 0);
+        _this.count.tint = 0x0080FF;
+        _this.strength.tint = 0xFF8000;
+        _this.elf = _this.game.add.image(xPos * 2, spacing * 2, "sprites", "elf", _this);
+        _this.dwarf = _this.game.add.image(xPos * 3.5, spacing * 2, "sprites", "dwarf", _this);
+        _this.elf.width = _this.dwarf.width = spacing * 0.7;
+        _this.elf.height = _this.dwarf.height = spacing;
+        _this.elf.anchor.setTo(0.5, 0.5);
+        _this.dwarf.anchor.setTo(0.5, 0.5);
+        _this.setLevel(1);
+        _this.setPartySize(15);
+        _this.setStrength(1234);
+        _this.setDwarf(true);
+        _this.setElf(true);
+        return _this;
+    }
+    Status.prototype.setLevel = function (level) {
+        this.level.text = "Level:" + level.toString();
+    };
+    Status.prototype.setPartySize = function (size) {
+        this.count.text = size.toString();
+    };
+    Status.prototype.setStrength = function (strength) {
+        this.strength.text = strength.toString();
+    };
+    Status.prototype.setElf = function (isAlive) {
+        this.elf.alpha = isAlive ? 1 : 0.7;
+        this.elf.rotation = isAlive ? 0 : -Math.PI / 2;
+    };
+    Status.prototype.setDwarf = function (isAlive) {
+        this.dwarf.alpha = isAlive ? 1 : 0.7;
+        this.dwarf.rotation = isAlive ? 0 : Math.PI / 2;
+    };
+    Status.prototype.destroy = function () {
+        _super.prototype.destroy.call(this);
+        this.level = this.count = this.elf = this.strength = this.dwarf = null;
+    };
+    return Status;
+}(Phaser.Group));
+var TextScroller = (function (_super) {
+    __extends(TextScroller, _super);
+    function TextScroller(game, width, height) {
+        var _this = _super.call(this, game) || this;
+        _this.yCursor = 0;
+        var scr = game.add.image(0, 0, "sprites", "scroll", _this);
+        scr.width = width;
+        scr.height = height;
+        _this.lines = [];
+        for (var n = 0; n < TextScroller.LINES; n++) {
+            _this.lines[n] = game.add.bitmapText(width * 0.14, (n + 1) * height / (TextScroller.LINES + 1), "font", "", 22, _this);
+            _this.lines[n].tint = 0x000000;
+            _this.lines[n].anchor.setTo(0, 0.5);
+        }
+        _this.yCursor = 0;
+        return _this;
+    }
+    TextScroller.prototype.write = function (s) {
+        if (this.yCursor == TextScroller.LINES) {
+            for (var i = 0; i < TextScroller.LINES - 1; i++) {
+                this.lines[i].text = this.lines[i + 1].text;
+            }
+            this.lines[TextScroller.LINES - 1].text = s;
+        }
+        else {
+            this.lines[this.yCursor++].text = s;
+        }
+    };
+    TextScroller.prototype.destroy = function () {
+        _super.prototype.destroy.call(this);
+    };
+    return TextScroller;
+}(Phaser.Group));
+TextScroller.LINES = 7;
 var CellContents;
 (function (CellContents) {
     CellContents[CellContents["NOTHING"] = 0] = "NOTHING";
