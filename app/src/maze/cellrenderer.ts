@@ -34,6 +34,7 @@ class CellRenderer extends Phaser.Group {
             this.contents = game.add.image(wall/2,wall/2,"sprites","exit",this);
             this.contents.width = this.contents.height = (cellSize-wall);
         }
+        this.updateCell(cell,true);
     }
 
     destroy() : void {
@@ -48,9 +49,14 @@ class CellRenderer extends Phaser.Group {
      * 
      * @memberOf CellRenderer
      */
-    updateCell(cell:Cell) : void {
-        this.visible = cell.visited;
-        if (this.downWall != null && cell.visited) {
+    updateCell(cell:Cell,forceUpdate:boolean = false) : void {
+        this.visible = (cell.visibility != Visibility.HIDDEN);
+
+        // This is a fix so we can see the maze contents but still see hidden areas.
+        this.visible = true;
+        this.alpha = (cell.visibility != Visibility.HIDDEN) ? 1.0 : 0.4;
+
+        if (this.downWall != null && (cell.visibility != Visibility.HIDDEN || forceUpdate)) {
             // Open walls.
             this.downWall.visible = cell.wallDown;
             this.rightWall.visible = cell.wallRight;

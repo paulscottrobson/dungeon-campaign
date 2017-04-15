@@ -16,24 +16,29 @@ var GameState = (function (_super) {
         return _this;
     }
     GameState.prototype.init = function (gameInfo) {
+        this.gameInfo = gameInfo;
         this.difficulty = gameInfo.difficulty;
-        this.maze = new Maze(gameInfo["size"] || 13, gameInfo["size"] || 13, gameInfo["levels"] || 4, gameInfo["difficulty"] || 1);
+        this.maze = gameInfo.maze;
     };
     GameState.prototype.create = function () {
         var bgr = this.game.add.tileSprite(0, 0, 128, 128, "sprites", "bgrtile");
         bgr.width = this.game.width;
         bgr.height = this.game.height;
-        this.rend = new Renderer(this.game, 96, this.maze.getLevel(0));
+        this.rend = new Renderer(this.game, 96, this.maze.getLevel(this.gameInfo.currentLevel));
         this.rend.x = -55;
         this.rend.y = -55;
         this.player = this.game.add.image(0, 0, "sprites", "player");
-        this.rend.positionObject(this.player, new Pos(2, 1));
-        this.rend.moveObjectTo(this.player, new Pos(6, 7));
-        var r = new TestLevelRenderer(this.game, this.maze.getLevel(0), 200, 200);
+        this.rend.positionObject(this.player, this.gameInfo["pos"]);
+        this.maze.getLevel(this.gameInfo.currentLevel).getCell(this.gameInfo.pos).visibility = Visibility.PERMANENT;
+        console.log(this.gameInfo.currentLevel, this.gameInfo.pos);
+        console.log(this.maze.getLevel(this.gameInfo.currentLevel).getCell(this.gameInfo.pos));
+        this.rend.updateCell(this.gameInfo.pos);
+        var r = new TestLevelRenderer(this.game, this.maze.getLevel(this.gameInfo.currentLevel), 200, 200);
         r.x = r.y = 10;
         var s = new Status(this.game);
         s.y = 20;
         s.x = this.game.width - 20 - s.width;
+        s.setLevel(this.gameInfo.currentLevel + 1);
         this.scr = new TextScroller(this.game, this.game.width, 250);
         this.scr.y = this.game.height - this.scr.height;
     };
@@ -42,10 +47,28 @@ var GameState = (function (_super) {
     GameState.prototype.update = function () {
         this.rend.x = -(this.player.x - this.game.width / 2);
         this.rend.y = -(this.player.y - this.game.height / 2);
-        if (++this.n % 20 == 0)
+        if (++this.n % 30 == 0)
             this.scr.write(Math.random().toString());
     };
     return GameState;
+}(Phaser.State));
+var StartState = (function (_super) {
+    __extends(StartState, _super);
+    function StartState() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    StartState.prototype.init = function (gameInfo) {
+        var m = new Maze(gameInfo["size"] || 13, gameInfo["size"] || 13, gameInfo["levels"] || 4, gameInfo["difficulty"] || 1);
+        var p = m.getLevel(0).findEmptySlot();
+        gameInfo["currentLevel"] = 0;
+        gameInfo["maze"] = m;
+        gameInfo["pos"] = p;
+        this.gameInfo = gameInfo;
+    };
+    StartState.prototype.create = function () {
+        this.game.state.start("Play", true, false, this.gameInfo);
+    };
+    return StartState;
 }(Phaser.State));
 window.onload = function () {
     var game = new MainApplication();
@@ -56,7 +79,8 @@ var MainApplication = (function (_super) {
         var _this = _super.call(this, 640, 960, Phaser.AUTO, "", null, false, false) || this;
         _this.state.add("Boot", new BootState());
         _this.state.add("Preload", new PreloadState());
-        _this.state.add("Main", new GameState());
+        _this.state.add("Start", new StartState());
+        _this.state.add("Play", new GameState());
         _this.state.start("Boot");
         return _this;
     }
@@ -102,8 +126,10 @@ var PreloadState = (function (_super) {
             this.game.load.audio(audioName, ["assets/sounds/" + audioName + ".mp3",
                 "assets/sounds/" + audioName + ".ogg"]);
         }
-        var info = { "difficulty": 1.0, "size": 10, "levels": 4 };
-        this.game.load.onLoadComplete.add(function () { _this.game.state.start("Main", true, false, info); }, this);
+        var info = { "difficulty": 1.0, "size": 10, "levels": 4, "level": 4 };
+        this.game.load.onLoadComplete.add(function () {
+            _this.game.state.start("Start", true, false, info);
+        }, this);
     };
     return PreloadState;
 }(Phaser.State));
@@ -166,6 +192,8 @@ var TextScroller = (function (_super) {
     function TextScroller(game, width, height) {
         var _this = _super.call(this, game) || this;
         _this.yCursor = 0;
+        _this.xCursor = 0;
+        _this.speedMod = 0;
         var scr = game.add.image(0, 0, "sprites", "scroll", _this);
         scr.width = width;
         scr.height = height;
@@ -175,18 +203,31 @@ var TextScroller = (function (_super) {
             _this.lines[n].tint = 0x000000;
             _this.lines[n].anchor.setTo(0, 0.5);
         }
-        _this.yCursor = 0;
+        _this.xCursor = 0;
+        _this.yCursor = -1;
+        _this.toWrite = "";
         return _this;
     }
     TextScroller.prototype.write = function (s) {
+        if (this.xCursor < this.toWrite.length) {
+            this.lines[this.yCursor].text = this.toWrite;
+        }
+        this.yCursor++;
         if (this.yCursor == TextScroller.LINES) {
             for (var i = 0; i < TextScroller.LINES - 1; i++) {
                 this.lines[i].text = this.lines[i + 1].text;
             }
-            this.lines[TextScroller.LINES - 1].text = s;
+            this.yCursor = TextScroller.LINES - 1;
         }
-        else {
-            this.lines[this.yCursor++].text = s;
+        this.lines[this.yCursor].text = "";
+        this.xCursor = 0;
+        this.toWrite = s;
+    };
+    TextScroller.prototype.update = function () {
+        this.speedMod++;
+        if (this.speedMod % 4 == 0 && this.xCursor < this.toWrite.length) {
+            this.xCursor++;
+            this.lines[this.yCursor].text = this.toWrite.slice(0, this.xCursor);
         }
     };
     TextScroller.prototype.destroy = function () {
@@ -215,12 +256,18 @@ var Direction;
     Direction[Direction["UP"] = 2] = "UP";
     Direction[Direction["DOWN"] = 3] = "DOWN";
 })(Direction || (Direction = {}));
+var Visibility;
+(function (Visibility) {
+    Visibility[Visibility["HIDDEN"] = 0] = "HIDDEN";
+    Visibility[Visibility["PERMANENT"] = 1] = "PERMANENT";
+    Visibility[Visibility["PRESENCE"] = 2] = "PRESENCE";
+})(Visibility || (Visibility = {}));
 var Cell = (function () {
     function Cell() {
         this.contents = CellContents.ROCK;
         this.wallDown = true;
         this.wallRight = true;
-        this.visited = false;
+        this.visibility = Visibility.HIDDEN;
     }
     return Cell;
 }());
@@ -246,15 +293,19 @@ var CellRenderer = (function (_super) {
             _this.contents = game.add.image(wall / 2, wall / 2, "sprites", "exit", _this);
             _this.contents.width = _this.contents.height = (cellSize - wall);
         }
+        _this.updateCell(cell, true);
         return _this;
     }
     CellRenderer.prototype.destroy = function () {
         _super.prototype.destroy.call(this);
         this.downWall = this.rightWall = this.contents = null;
     };
-    CellRenderer.prototype.updateCell = function (cell) {
-        this.visible = cell.visited;
-        if (this.downWall != null && cell.visited) {
+    CellRenderer.prototype.updateCell = function (cell, forceUpdate) {
+        if (forceUpdate === void 0) { forceUpdate = false; }
+        this.visible = (cell.visibility != Visibility.HIDDEN);
+        this.visible = true;
+        this.alpha = (cell.visibility != Visibility.HIDDEN) ? 1.0 : 0.4;
+        if (this.downWall != null && (cell.visibility != Visibility.HIDDEN || forceUpdate)) {
             this.downWall.visible = cell.wallDown;
             this.rightWall.visible = cell.wallRight;
             var sc = "";
@@ -526,7 +577,6 @@ var Renderer = (function (_super) {
             _this.cellRenderers[x] = [];
             for (var y = level.getHeight() - 1; y >= 0; y--) {
                 var p = new Pos(x, y);
-                _this.level.getCell(p).visited = true;
                 var cr = new CellRenderer(_this.game, _this.level.getCell(p), cellSize, _this);
                 cr.x = x * cellSize;
                 cr.y = y * cellSize;

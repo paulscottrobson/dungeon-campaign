@@ -28,6 +28,15 @@ enum Direction {
 }
 
 /**
+ * Types of visibility - not visible, always visible, visible by presence only.
+ * 
+ * @enum {number}
+ */
+enum Visibility {
+    HIDDEN, PERMANENT, PRESENCE
+}
+
+/**
  * This represents the permanent features of a cell - monsters, boss monsters and 
  * so on are transient objects.
  * 
@@ -59,15 +68,15 @@ class Cell {
     /**
      * Has this cell been visited by the player ?
      * 
-     * @type {boolean}
+     * @type {Visibility}
      * @memberOf Cell
      */
-    public visited:boolean;
+    public visibility:Visibility
 
     constructor() {
         this.contents = CellContents.ROCK;
         this.wallDown = true;
         this.wallRight = true;
-        this.visited = false;
+        this.visibility = Visibility.HIDDEN;
     }
 }

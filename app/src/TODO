@@ -1,2 +1,19 @@
 
+Create generalised display action object class
+Create player extension
+Initialise in maze first level.
+Link player to centralised display and the system information
+Implement basic movement - 1 tile move 2 tiles jump, same square action.
+Warning messages (if elf alive)
+Lighting area (if dwarf alive, only current cell).
+Movement to monster reveals and instantiates monster and treasure  but is not immediate attack.
+Movement to pit causes fall down, level changing code.
+Necromancer / Pterodactyl on landing on 
+Treasure on landing on. (not if monster present)
+Action Button , code for treasure, stairs
+Gas effects
+Battling.
+Generalised bad guys
+Specific bad guys
+
 

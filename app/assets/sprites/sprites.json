@@ -64,119 +64,126 @@
             "sourceSize":{ "w":32,"h":32 }
         },
         "lycanthrope": {
-            "frame":{ "x":436,"y":144,"w":32,"h":32 },
+            "frame":{ "x":476,"y":300,"w":32,"h":32 },
             "rotated":false,
             "trimmed":false,
             "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
             "sourceSize":{ "w":32,"h":32 }
         },
         "rock": {
-            "frame":{ "x":472,"y":144,"w":32,"h":32 },
+            "frame":{ "x":396,"y":372,"w":32,"h":32 },
             "rotated":false,
             "trimmed":false,
             "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
             "sourceSize":{ "w":32,"h":32 }
         },
         "gas": {
-            "frame":{ "x":396,"y":176,"w":32,"h":32 },
+            "frame":{ "x":432,"y":372,"w":32,"h":32 },
             "rotated":false,
             "trimmed":false,
             "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
             "sourceSize":{ "w":32,"h":32 }
         },
         "minotaur": {
-            "frame":{ "x":432,"y":180,"w":32,"h":32 },
+            "frame":{ "x":468,"y":372,"w":32,"h":32 },
             "rotated":false,
             "trimmed":false,
             "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
             "sourceSize":{ "w":32,"h":32 }
         },
         "rectangle": {
-            "frame":{ "x":216,"y":168,"w":76,"h":51 },
+            "frame":{ "x":396,"y":300,"w":76,"h":51 },
             "rotated":false,
             "trimmed":false,
             "spriteSourceSize":{ "x":0,"y":0,"w":76,"h":51 },
             "sourceSize":{ "w":76,"h":51 }
         },
         "werewolf": {
-            "frame":{ "x":468,"y":180,"w":32,"h":32 },
+            "frame":{ "x":396,"y":408,"w":32,"h":32 },
             "rotated":false,
             "trimmed":false,
             "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
             "sourceSize":{ "w":32,"h":32 }
         },
         "centaur": {
-            "frame":{ "x":296,"y":196,"w":32,"h":32 },
+            "frame":{ "x":432,"y":408,"w":32,"h":32 },
             "rotated":false,
             "trimmed":false,
             "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
             "sourceSize":{ "w":32,"h":32 }
         },
         "wall": {
-            "frame":{ "x":296,"y":176,"w":96,"h":16 },
+            "frame":{ "x":396,"y":352,"w":96,"h":16 },
             "rotated":false,
             "trimmed":false,
             "spriteSourceSize":{ "x":0,"y":0,"w":96,"h":16 },
             "sourceSize":{ "w":96,"h":16 }
         },
         "dwarf": {
-            "frame":{ "x":132,"y":168,"w":80,"h":120 },
+            "frame":{ "x":396,"y":176,"w":80,"h":120 },
             "rotated":false,
             "trimmed":false,
             "spriteSourceSize":{ "x":0,"y":0,"w":80,"h":120 },
             "sourceSize":{ "w":80,"h":120 }
         },
         "pit": {
-            "frame":{ "x":332,"y":196,"w":32,"h":32 },
+            "frame":{ "x":468,"y":408,"w":32,"h":32 },
             "rotated":false,
             "trimmed":false,
             "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
             "sourceSize":{ "w":32,"h":32 }
         },
         "skeleton": {
-            "frame":{ "x":368,"y":212,"w":32,"h":32 },
+            "frame":{ "x":0,"y":428,"w":32,"h":32 },
             "rotated":false,
             "trimmed":false,
             "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
             "sourceSize":{ "w":32,"h":32 }
         },
+        "dice4": {
+            "frame":{ "x":132,"y":168,"w":128,"h":125 },
+            "rotated":false,
+            "trimmed":false,
+            "spriteSourceSize":{ "x":0,"y":0,"w":128,"h":125 },
+            "sourceSize":{ "w":128,"h":125 }
+        },
         "mazefloor": {
-            "frame":{ "x":404,"y":216,"w":32,"h":32 },
+            "frame":{ "x":36,"y":428,"w":32,"h":32 },
             "rotated":false,
             "trimmed":false,
             "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
             "sourceSize":{ "w":32,"h":32 }
         },
         "mummy": {
-            "frame":{ "x":440,"y":216,"w":32,"h":32 },
+            "frame":{ "x":72,"y":428,"w":32,"h":32 },
             "rotated":false,
             "trimmed":false,
             "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
             "sourceSize":{ "w":32,"h":32 }
         },
         "dragon": {
-            "frame":{ "x":476,"y":216,"w":32,"h":32 },
+            "frame":{ "x":264,"y":432,"w":32,"h":32 },
             "rotated":false,
             "trimmed":false,
             "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
             "sourceSize":{ "w":32,"h":32 }
         },
         "spectre": {
-            "frame":{ "x":216,"y":220,"w":32,"h":32 },
+            "frame":{ "x":300,"y":432,"w":32,"h":32 },
             "rotated":false,
             "trimmed":false,
             "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
             "sourceSize":{ "w":32,"h":32 }
         },
         "player": {
-            "frame":{ "x":252,"y":220,"w":32,"h":32 },
+            "frame":{ "x":336,"y":432,"w":32,"h":32 },
             "rotated":false,
             "trimmed":false,
             "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
             "sourceSize":{ "w":32,"h":32 }
         },
         "berserker": {
-            "frame":{ "x":288,"y":232,"w":32,"h":32 },
+            "frame":{ "x":372,"y":444,"w":32,"h":32 },
             "rotated":false,
             "trimmed":false,
             "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
@@ -189,29 +196,36 @@
             "spriteSourceSize":{ "x":0,"y":0,"w":120,"h":175 },
             "sourceSize":{ "w":120,"h":175 }
         },
+        "dice3": {
+            "frame":{ "x":264,"y":176,"w":128,"h":125 },
+            "rotated":false,
+            "trimmed":false,
+            "spriteSourceSize":{ "x":0,"y":0,"w":128,"h":125 },
+            "sourceSize":{ "w":128,"h":125 }
+        },
         "vampire": {
-            "frame":{ "x":324,"y":232,"w":32,"h":32 },
+            "frame":{ "x":408,"y":444,"w":32,"h":32 },
             "rotated":false,
             "trimmed":false,
             "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
             "sourceSize":{ "w":32,"h":32 }
         },
         "troll": {
-            "frame":{ "x":360,"y":248,"w":32,"h":32 },
+            "frame":{ "x":444,"y":444,"w":32,"h":32 },
             "rotated":false,
             "trimmed":false,
             "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
             "sourceSize":{ "w":32,"h":32 }
         },
         "zombie": {
-            "frame":{ "x":396,"y":252,"w":32,"h":32 },
+            "frame":{ "x":0,"y":464,"w":32,"h":32 },
             "rotated":false,
             "trimmed":false,
             "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
             "sourceSize":{ "w":32,"h":32 }
         },
         "carpet": {
-            "frame":{ "x":432,"y":252,"w":32,"h":32 },
+            "frame":{ "x":36,"y":464,"w":32,"h":32 },
             "rotated":false,
             "trimmed":false,
             "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
@@ -224,33 +238,61 @@
             "spriteSourceSize":{ "x":0,"y":0,"w":309,"h":166 },
             "sourceSize":{ "w":309,"h":166 }
         },
+        "dice1": {
+            "frame":{ "x":132,"y":296,"w":128,"h":125 },
+            "rotated":false,
+            "trimmed":false,
+            "spriteSourceSize":{ "x":0,"y":0,"w":128,"h":125 },
+            "sourceSize":{ "w":128,"h":125 }
+        },
         "exit": {
-            "frame":{ "x":468,"y":252,"w":32,"h":32 },
+            "frame":{ "x":72,"y":464,"w":32,"h":32 },
             "rotated":false,
             "trimmed":false,
             "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
             "sourceSize":{ "w":32,"h":32 }
         },
         "spider": {
-            "frame":{ "x":216,"y":256,"w":32,"h":32 },
+            "frame":{ "x":264,"y":468,"w":32,"h":32 },
             "rotated":false,
             "trimmed":false,
             "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
             "sourceSize":{ "w":32,"h":32 }
         },
         "ogre": {
-            "frame":{ "x":252,"y":256,"w":32,"h":32 },
+            "frame":{ "x":300,"y":468,"w":32,"h":32 },
             "rotated":false,
             "trimmed":false,
             "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
             "sourceSize":{ "w":32,"h":32 }
         },
         "serpent": {
-            "frame":{ "x":288,"y":268,"w":32,"h":32 },
+            "frame":{ "x":336,"y":468,"w":32,"h":32 },
             "rotated":false,
             "trimmed":false,
             "spriteSourceSize":{ "x":0,"y":0,"w":32,"h":32 },
             "sourceSize":{ "w":32,"h":32 }
+        },
+        "dice5": {
+            "frame":{ "x":0,"y":300,"w":128,"h":125 },
+            "rotated":false,
+            "trimmed":false,
+            "spriteSourceSize":{ "x":0,"y":0,"w":128,"h":125 },
+            "sourceSize":{ "w":128,"h":125 }
+        },
+        "dice6": {
+            "frame":{ "x":264,"y":304,"w":128,"h":125 },
+            "rotated":false,
+            "trimmed":false,
+            "spriteSourceSize":{ "x":0,"y":0,"w":128,"h":125 },
+            "sourceSize":{ "w":128,"h":125 }
+        },
+        "dice2": {
+            "frame":{ "x":132,"y":424,"w":128,"h":125 },
+            "rotated":false,
+            "trimmed":false,
+            "spriteSourceSize":{ "x":0,"y":0,"w":128,"h":125 },
+            "sourceSize":{ "w":128,"h":125 }
         }
     },
     "meta":{
@@ -259,7 +301,7 @@
         "image":"sprites.png",
         "size":{
              "w":512,
-             "h":302
+             "h":551
          },
          "scale":1
     }

@@ -12,7 +12,8 @@ class MainApplication extends Phaser.Game {
         // Create a new state and switch to it.
         this.state.add("Boot", new BootState());
         this.state.add("Preload", new PreloadState());
-        this.state.add("Main",new GameState());
+        this.state.add("Start",new StartState());
+        this.state.add("Play",new GameState());
         this.state.start("Boot");
     }
 }

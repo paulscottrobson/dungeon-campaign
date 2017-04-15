@@ -14,9 +14,6 @@ class Renderer extends Phaser.Group {
             this.cellRenderers[x] = [];
             for (var y = level.getHeight()-1;y >= 0;y--) {
                 var p:Pos = new Pos(x,y);
-
-                this.level.getCell(p).visited = true;
-
                 var cr:CellRenderer = new CellRenderer(this.game,
                                             this.level.getCell(p),cellSize,this);
                 cr.x = x * cellSize;cr.y = y * cellSize;
