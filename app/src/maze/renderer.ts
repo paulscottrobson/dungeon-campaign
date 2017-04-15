@@ -18,28 +18,40 @@ class Renderer extends Phaser.Group {
                                             this.level.getCell(p),cellSize,this);
                 cr.x = x * cellSize;cr.y = y * cellSize;
                 this.cellRenderers[x][y] = cr;
-                this.updateCell(p);
                 this.add(cr);
             }
         }
     }
 
     updateCell(pos:Pos) :void  {
-        this.cellRenderers[pos.x][pos.y].updateCell(this.level.getCell(pos));
+        this.cellRenderers[pos.x][pos.y].updateCellContents(this.level.getCell(pos));
+        var isOn:boolean = this.level.getCell(pos).visibility != Visibility.HIDDEN;
+        if (pos.x > 0) {
+            var p1:Pos = new Pos(pos.x-1,pos.y);
+            if (this.level.getCell(p1).wallRight) {
+                this.cellRenderers[p1.x][p1.y].setWall(Direction.RIGHT,isOn);
+            }
+        }
+        if (pos.y > 0) {
+            var p1:Pos = new Pos(pos.x,pos.y-1);
+            if (this.level.getCell(p1).wallDown) {
+                this.cellRenderers[p1.x][p1.y].setWall(Direction.DOWN,isOn);
+            }
+        }
+
     }
 
-    positionObject(obj:Phaser.Image,pos:Pos) : void {
+    positionObject(obj:Phaser.Sprite,cellPos:Pos) : void {
         this.add(obj);
-        obj.bringToTop();
         obj.anchor.setTo(0.5,0.5);
-        obj.x = (pos.x + 0.5) * this.cellSize;
-        obj.y = (pos.y + 0.5) * this.cellSize;
         obj.width = obj.height = this.cellSize * 3/4;
+        obj.x = (cellPos.x + 0.5) * this.cellSize;
+        obj.y = (cellPos.y + 0.5) * this.cellSize;
     }
 
-    moveObjectTo(obj:Phaser.Image,pos:Pos) : void {
-        var x1:number = (pos.x + 0.5) * this.cellSize;
-        var y1:number = (pos.y + 0.5) * this.cellSize;
+    moveObjectTo(obj:Phaser.Sprite,cellPos:Pos) : void {        
+        var x1:number = (cellPos.x + 0.5) * this.cellSize;
+        var y1:number = (cellPos.y + 0.5) * this.cellSize;
         this.game.add.tween(obj).to({ x: x1,y: y1 },
         (Math.abs(x1-obj.x)+Math.abs(y1-obj.y))*2,Phaser.Easing.Default,true);
     }

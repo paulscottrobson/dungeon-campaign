@@ -63,6 +63,10 @@ class Status extends Phaser.Group {
         this.dwarf.rotation = isAlive ? 0 : Math.PI/2;
     }
 
+    setTreasure(amount:number) : void {
+        // Not currently displaying this.
+    }
+
     destroy():void {
         super.destroy();
         this.level = this.count = this.elf = this.strength = this.dwarf = null;

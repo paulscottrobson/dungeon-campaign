@@ -9,6 +9,7 @@
 class CellRenderer extends Phaser.Group {
 
     private cellSize:number;
+    private floor:Phaser.Image;
     private rightWall:Phaser.Image;
     private downWall:Phaser.Image;
     private contents:Phaser.Image;
@@ -17,10 +18,12 @@ class CellRenderer extends Phaser.Group {
         super(game);
         owner.add(this);
         this.cellSize = cellSize;
-        // Create floor which is rock or maze.
-        var floor:Phaser.Image = game.add.image(0,0,"sprites",
-                (cell.contents == CellContents.ROCK) ? "rock":"mazefloor",this);
-        floor.width = floor.height = cellSize;
+        // Create this.floor which is rock or maze.
+        this.floor = game.add.image(0,0,"sprites",
+                        (cell.contents == CellContents.ROCK) ? "rock":"mazefloor",this);
+        this.floor.width = this.floor.height = cellSize;
+        this.floor.visible = false;
+
         if (cell.contents != CellContents.ROCK) {
             // Create two walls right and bottom
             var wall:number = cellSize / 4;
@@ -30,16 +33,19 @@ class CellRenderer extends Phaser.Group {
             this.rightWall = game.add.image(cellSize,0,"sprites","wall",this);
             this.rightWall.width = cellSize;this.rightWall.height = wall;
             this.rightWall.anchor.setTo(0,0.5);this.rightWall.rotation = Math.PI/2;
+
+            this.downWall.visible = this.rightWall.visible = false;
+
             // Contents image
             this.contents = game.add.image(wall/2,wall/2,"sprites","exit",this);
             this.contents.width = this.contents.height = (cellSize-wall);
+            this.contents.visible = false;
         }
-        this.updateCell(cell,true);
     }
 
     destroy() : void {
         super.destroy();
-        this.downWall = this.rightWall = this.contents = null;
+        this.floor = this.downWall = this.rightWall = this.contents = null;
     }
 
     /**
@@ -49,17 +55,17 @@ class CellRenderer extends Phaser.Group {
      * 
      * @memberOf CellRenderer
      */
-    updateCell(cell:Cell,forceUpdate:boolean = false) : void {
-        this.visible = (cell.visibility != Visibility.HIDDEN);
+    updateCellContents(cell:Cell) : void {
+        this.floor.visible = (cell.visibility != Visibility.HIDDEN);
 
         // This is a fix so we can see the maze contents but still see hidden areas.
-        this.visible = true;
-        this.alpha = (cell.visibility != Visibility.HIDDEN) ? 1.0 : 0.4;
 
-        if (this.downWall != null && (cell.visibility != Visibility.HIDDEN || forceUpdate)) {
+        if (this.contents != null) {
+            this.contents.visible = this.floor.visible;
+
             // Open walls.
-            this.downWall.visible = cell.wallDown;
-            this.rightWall.visible = cell.wallRight;
+            this.downWall.visible = cell.wallDown && this.contents.visible;
+            this.rightWall.visible = cell.wallRight && this.contents.visible;
 
             // Figure out what's there. Some things, monsters, are active objects            
             var sc:string = "";
@@ -70,12 +76,19 @@ class CellRenderer extends Phaser.Group {
             if (cell.contents == CellContents.TREASURE) { sc = "treasure"; }     
             if (sc != "") {
                 this.contents.loadTexture("sprites",sc);
-                this.contents.visible = true;
             } else {
                 this.contents.visible = false;
-            }      
-
+            }   
         } 
     }
 
+    setWall(dir:Direction,isOn:boolean) {
+        if (this.floor.visible) { isOn = true; }
+        if (dir == Direction.RIGHT && this.rightWall != null) {
+            this.rightWall.visible = isOn;
+        }
+        if (dir == Direction.DOWN && this.downWall != null) {
+            this.downWall.visible = isOn;
+        }
+    }
 }

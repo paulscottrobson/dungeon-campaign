@@ -203,6 +203,9 @@ class BaseLevel implements ILevel {
      * @memberOf BaseLevel
      */
     getCell(pos:Pos):Cell {
+        if (pos.x < 0 || pos.y < 0 || pos.x >= this.width || pos.y >= this.height) {
+            return null;
+        }
         return this.cells[pos.x][pos.y]
     }
 
@@ -224,8 +227,19 @@ class BaseLevel implements ILevel {
         // When at the left or the top edge you cannot go left or up whatever
         if (pos.x == 0 && dir == Direction.LEFT) { return false; }
         if (pos.y == 0 && dir == Direction.UP) { return false; }
-        // TODO: Check various options.
-        console.log("TODO:CANMOVE NOT IMPLEMENTED");
+
+        if (dir == Direction.LEFT) {
+            return !(this.cells[pos.x-1][pos.y].wallRight);
+        }
+        if (dir == Direction.RIGHT) {
+            return !(this.cells[pos.x][pos.y].wallRight);
+        }
+        if (dir == Direction.UP) {
+            return !(this.cells[pos.x][pos.y-1].wallDown);
+        }
+        if (dir == Direction.DOWN) {
+            return !(this.cells[pos.x][pos.y].wallDown);
+        }
         return false;
     }
 }

@@ -2,20 +2,20 @@
 
 class StartState extends Phaser.State {
 
-    private gameInfo:any;
+    private gameInfo:GameData;
 
-    init(gameInfo:any) : void {
+    init(gameInfo:GameData) : void {
         // Create a maze according to information
-        var m:Maze = new Maze(gameInfo["size"]||13,gameInfo["size"]||13,
-                              gameInfo["levels"]||4,
-                              gameInfo["difficulty"]||1);
-        // Find a start position which is empty.
-        var p:Pos = m.getLevel(0).findEmptySlot();
+        var m:Maze = new Maze(gameInfo.size,gameInfo.size,
+                              gameInfo.levels,
+                              gameInfo.difficulty);
 
         // Save information into gameInfo and switch to game mode on create.
-        gameInfo["currentLevel"] = 0;                                    
-        gameInfo["maze"] = m;
-        gameInfo["pos"] = p;
+
+        var gameInfo:GameData = new GameData();
+        gameInfo.currentLevel = 0;
+        gameInfo.maze = m;
+        gameInfo.player = new Player(m);
         this.gameInfo = gameInfo;                                    
     }
 

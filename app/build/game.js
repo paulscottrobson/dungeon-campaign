@@ -11,58 +11,171 @@ var __extends = (this && this.__extends) || (function () {
 var GameState = (function (_super) {
     __extends(GameState, _super);
     function GameState() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.n = 0;
-        return _this;
+        return _super !== null && _super.apply(this, arguments) || this;
     }
     GameState.prototype.init = function (gameInfo) {
         this.gameInfo = gameInfo;
-        this.difficulty = gameInfo.difficulty;
-        this.maze = gameInfo.maze;
     };
     GameState.prototype.create = function () {
         var bgr = this.game.add.tileSprite(0, 0, 128, 128, "sprites", "bgrtile");
         bgr.width = this.game.width;
         bgr.height = this.game.height;
-        this.rend = new Renderer(this.game, 96, this.maze.getLevel(this.gameInfo.currentLevel));
-        this.rend.x = -55;
-        this.rend.y = -55;
-        this.player = this.game.add.image(0, 0, "sprites", "player");
-        this.rend.positionObject(this.player, this.gameInfo["pos"]);
-        this.maze.getLevel(this.gameInfo.currentLevel).getCell(this.gameInfo.pos).visibility = Visibility.PERMANENT;
-        console.log(this.gameInfo.currentLevel, this.gameInfo.pos);
-        console.log(this.maze.getLevel(this.gameInfo.currentLevel).getCell(this.gameInfo.pos));
-        this.rend.updateCell(this.gameInfo.pos);
-        var r = new TestLevelRenderer(this.game, this.maze.getLevel(this.gameInfo.currentLevel), 200, 200);
-        r.x = r.y = 10;
-        var s = new Status(this.game);
-        s.y = 20;
-        s.x = this.game.width - 20 - s.width;
-        s.setLevel(this.gameInfo.currentLevel + 1);
-        this.scr = new TextScroller(this.game, this.game.width, 250);
-        this.scr.y = this.game.height - this.scr.height;
+        bgr.inputEnabled = true;
+        bgr.events.onInputDown.add(this.clickHandler, this);
+        this.player = this.gameInfo.player;
+        this.playerSprite = this.game.add.sprite(0, 0, "sprites", "player");
+        this.statusArea = new Status(this.game);
+        this.statusArea.y = 20;
+        this.statusArea.x = this.game.width - 20 - this.statusArea.width;
+        this.textScroller = new TextScroller(this.game, this.game.width, 250);
+        this.textScroller.y = this.game.height - this.textScroller.height;
+        this.mazeRenderer = null;
+        this.monsterList = [];
+        this.moveToLevel(this.gameInfo.currentLevel);
+    };
+    GameState.prototype.clickHandler = function (object, pointer) {
+        this.game.tweens.removeFrom(this.playerSprite);
+        this.mazeRenderer.positionObject(this.playerSprite, this.player.cellPos);
+        var x = pointer.x - this.mazeRenderer.x;
+        var y = pointer.y - this.mazeRenderer.y;
+        x = Math.floor(x / GameState.TILESIZE);
+        y = Math.floor(y / GameState.TILESIZE);
+        var level = this.gameInfo.maze.getLevel(this.gameInfo.currentLevel);
+        if (x >= 0 && y >= 0 && x < level.getWidth() && y < level.getHeight()) {
+            if (x == this.player.cellPos.x || y == this.player.cellPos.y) {
+                var count = Math.abs(x - this.player.cellPos.x) + Math.abs(y - this.player.cellPos.y);
+                if (count > 0 && count <= 2) {
+                    this.movePlayer(x - this.player.cellPos.x, y - this.player.cellPos.y, count);
+                }
+                if (count == 0) {
+                    this.actionCell(new Pos(x, y));
+                }
+            }
+        }
+    };
+    GameState.prototype.movePlayer = function (dx, dy, count) {
+        if (dx != 0) {
+            dx = (dx > 0) ? 1 : -1;
+        }
+        if (dy != 0) {
+            dy = (dy > 0) ? 1 : -1;
+        }
+        var dir = (dx != 0) ? (dx < 0 ? Direction.LEFT : Direction.RIGHT)
+            : (dy < 0 ? Direction.UP : Direction.DOWN);
+        var level = this.gameInfo.maze.getLevel(this.gameInfo.currentLevel);
+        if (!this.player.isDwarfAlive) {
+            if (level.getCell(this.player.cellPos).visibility == Visibility.PRESENCE) {
+                level.getCell(this.player.cellPos).visibility = Visibility.HIDDEN;
+                this.mazeRenderer.updateCell(this.player.cellPos);
+            }
+        }
+        while (count > 0) {
+            count = count - 1;
+            var newPos = new Pos(this.player.cellPos.x + dx, this.player.cellPos.y + dy);
+            if (level.getCell(newPos).contents == CellContents.ROCK && this.player.isDwarfAlive) {
+                this.lightSquare(this.gameInfo.currentLevel, newPos);
+            }
+            if (level.canMove(this.player.cellPos, dir)) {
+                this.player.cellPos.x += dx;
+                this.player.cellPos.y += dy;
+                if (this.player.isDwarfAlive) {
+                    this.lightSquare(this.gameInfo.currentLevel, this.player.cellPos);
+                }
+            }
+        }
+        var cellContents = level.getCell(this.player.cellPos).contents;
+        this.mazeRenderer.moveObjectTo(this.playerSprite, this.player.cellPos);
+        this.warningMessages();
+        if (!this.player.isDwarfAlive) {
+            if (level.getCell(this.player.cellPos).visibility == Visibility.HIDDEN) {
+                level.getCell(this.player.cellPos).visibility = Visibility.PRESENCE;
+                this.mazeRenderer.updateCell(this.player.cellPos);
+            }
+        }
+    };
+    GameState.prototype.actionCell = function (pos) {
+        console.log("Action ", pos.x, pos.y);
+        this.player.isDwarfAlive = false;
+    };
+    GameState.prototype.moveToLevel = function (newLevel) {
+        if (this.mazeRenderer != null) {
+            this.mazeRenderer.destroy();
+        }
+        for (var _i = 0, _a = this.monsterList; _i < _a.length; _i++) {
+            var m = _a[_i];
+            m.destroy();
+        }
+        this.monsterList = [];
+        this.mazeRenderer = new Renderer(this.game, GameState.TILESIZE, this.gameInfo.maze.getLevel(newLevel));
+        this.mazeRenderer.positionObject(this.playerSprite, this.player.cellPos);
+        this.lightSquare(newLevel, this.player.cellPos);
+        this.statusArea.setLevel(newLevel + 1);
+        this.player.refreshStatus(this.statusArea);
+        this.gameInfo.currentLevel = newLevel;
+        this.game.world.bringToTop(this.textScroller);
+        this.game.world.bringToTop(this.playerSprite);
+        this.textScroller.write("Entering level " + (newLevel + 1));
+        this.warningMessages();
+    };
+    GameState.prototype.warningMessages = function () {
+        if (this.player.isElfAlive) {
+            var searchList = [];
+            searchList.push(new Pos(this.player.cellPos.x - 1, this.player.cellPos.y));
+            searchList.push(new Pos(this.player.cellPos.x + 1, this.player.cellPos.y));
+            searchList.push(new Pos(this.player.cellPos.x, this.player.cellPos.y - 1));
+            searchList.push(new Pos(this.player.cellPos.x, this.player.cellPos.y + 1));
+            var found = false;
+            for (var _i = 0, searchList_1 = searchList; _i < searchList_1.length; _i++) {
+                var pos = searchList_1[_i];
+                var cell = this.gameInfo.maze.getLevel(this.gameInfo.currentLevel).getCell(pos);
+                if (cell != null) {
+                    if (cell.contents == CellContents.NECROMANCER || cell.contents == CellContents.PIT) {
+                        found = true;
+                    }
+                }
+            }
+            if (found) {
+                this.textScroller.write("Beware! Danger Near!");
+            }
+        }
+    };
+    GameState.prototype.lightSquare = function (clevel, pos, makeAlways) {
+        if (makeAlways === void 0) { makeAlways = false; }
+        var level = this.gameInfo.maze.getLevel(clevel);
+        level.getCell(pos).visibility =
+            (this.player.isDwarfAlive || makeAlways ? Visibility.PERMANENT :
+                Visibility.PRESENCE);
+        this.mazeRenderer.updateCell(pos);
     };
     GameState.prototype.destroy = function () {
     };
     GameState.prototype.update = function () {
-        this.rend.x = -(this.player.x - this.game.width / 2);
-        this.rend.y = -(this.player.y - this.game.height / 2);
-        if (++this.n % 30 == 0)
-            this.scr.write(Math.random().toString());
+        this.mazeRenderer.x = -(this.playerSprite.x - this.game.width / 2);
+        this.mazeRenderer.y = -(this.playerSprite.y - this.textScroller.y / 2);
+        this.player.refreshStatus(this.statusArea);
     };
     return GameState;
 }(Phaser.State));
+GameState.TILESIZE = 96;
+var GameData = (function () {
+    function GameData() {
+        this.difficulty = 1.0;
+        this.size = 10;
+        this.levels = 4;
+    }
+    return GameData;
+}());
 var StartState = (function (_super) {
     __extends(StartState, _super);
     function StartState() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     StartState.prototype.init = function (gameInfo) {
-        var m = new Maze(gameInfo["size"] || 13, gameInfo["size"] || 13, gameInfo["levels"] || 4, gameInfo["difficulty"] || 1);
-        var p = m.getLevel(0).findEmptySlot();
-        gameInfo["currentLevel"] = 0;
-        gameInfo["maze"] = m;
-        gameInfo["pos"] = p;
+        var m = new Maze(gameInfo.size, gameInfo.size, gameInfo.levels, gameInfo.difficulty);
+        var gameInfo = new GameData();
+        gameInfo.currentLevel = 0;
+        gameInfo.maze = m;
+        gameInfo.player = new Player(m);
         this.gameInfo = gameInfo;
     };
     StartState.prototype.create = function () {
@@ -70,6 +183,33 @@ var StartState = (function (_super) {
     };
     return StartState;
 }(Phaser.State));
+var Monster = (function (_super) {
+    __extends(Monster, _super);
+    function Monster(game) {
+        return _super.call(this, game) || this;
+    }
+    Monster.prototype.destroy = function () {
+        _super.prototype.destroy.call(this);
+    };
+    return Monster;
+}(Phaser.Group));
+var Player = (function () {
+    function Player(maze) {
+        this.strength = 1;
+        this.manPower = 15;
+        this.treasure = 0;
+        this.isElfAlive = this.isDwarfAlive = true;
+        this.cellPos = maze.getLevel(0).findEmptySlot();
+    }
+    Player.prototype.refreshStatus = function (status) {
+        status.setDwarf(this.isDwarfAlive);
+        status.setElf(this.isElfAlive);
+        status.setPartySize(this.manPower);
+        status.setStrength(this.strength);
+        status.setTreasure(this.treasure);
+    };
+    return Player;
+}());
 window.onload = function () {
     var game = new MainApplication();
 };
@@ -126,9 +266,9 @@ var PreloadState = (function (_super) {
             this.game.load.audio(audioName, ["assets/sounds/" + audioName + ".mp3",
                 "assets/sounds/" + audioName + ".ogg"]);
         }
-        var info = { "difficulty": 1.0, "size": 10, "levels": 4, "level": 4 };
+        var gameInfo = new GameData();
         this.game.load.onLoadComplete.add(function () {
-            _this.game.state.start("Start", true, false, info);
+            _this.game.state.start("Start", true, false, gameInfo);
         }, this);
     };
     return PreloadState;
@@ -180,6 +320,8 @@ var Status = (function (_super) {
     Status.prototype.setDwarf = function (isAlive) {
         this.dwarf.alpha = isAlive ? 1 : 0.7;
         this.dwarf.rotation = isAlive ? 0 : Math.PI / 2;
+    };
+    Status.prototype.setTreasure = function (amount) {
     };
     Status.prototype.destroy = function () {
         _super.prototype.destroy.call(this);
@@ -277,8 +419,9 @@ var CellRenderer = (function (_super) {
         var _this = _super.call(this, game) || this;
         owner.add(_this);
         _this.cellSize = cellSize;
-        var floor = game.add.image(0, 0, "sprites", (cell.contents == CellContents.ROCK) ? "rock" : "mazefloor", _this);
-        floor.width = floor.height = cellSize;
+        _this.floor = game.add.image(0, 0, "sprites", (cell.contents == CellContents.ROCK) ? "rock" : "mazefloor", _this);
+        _this.floor.width = _this.floor.height = cellSize;
+        _this.floor.visible = false;
         if (cell.contents != CellContents.ROCK) {
             var wall = cellSize / 4;
             _this.downWall = game.add.image(0, cellSize, "sprites", "wall", _this);
@@ -290,24 +433,23 @@ var CellRenderer = (function (_super) {
             _this.rightWall.height = wall;
             _this.rightWall.anchor.setTo(0, 0.5);
             _this.rightWall.rotation = Math.PI / 2;
+            _this.downWall.visible = _this.rightWall.visible = false;
             _this.contents = game.add.image(wall / 2, wall / 2, "sprites", "exit", _this);
             _this.contents.width = _this.contents.height = (cellSize - wall);
+            _this.contents.visible = false;
         }
-        _this.updateCell(cell, true);
         return _this;
     }
     CellRenderer.prototype.destroy = function () {
         _super.prototype.destroy.call(this);
-        this.downWall = this.rightWall = this.contents = null;
+        this.floor = this.downWall = this.rightWall = this.contents = null;
     };
-    CellRenderer.prototype.updateCell = function (cell, forceUpdate) {
-        if (forceUpdate === void 0) { forceUpdate = false; }
-        this.visible = (cell.visibility != Visibility.HIDDEN);
-        this.visible = true;
-        this.alpha = (cell.visibility != Visibility.HIDDEN) ? 1.0 : 0.4;
-        if (this.downWall != null && (cell.visibility != Visibility.HIDDEN || forceUpdate)) {
-            this.downWall.visible = cell.wallDown;
-            this.rightWall.visible = cell.wallRight;
+    CellRenderer.prototype.updateCellContents = function (cell) {
+        this.floor.visible = (cell.visibility != Visibility.HIDDEN);
+        if (this.contents != null) {
+            this.contents.visible = this.floor.visible;
+            this.downWall.visible = cell.wallDown && this.contents.visible;
+            this.rightWall.visible = cell.wallRight && this.contents.visible;
             var sc = "";
             if (cell.contents == CellContents.EXIT) {
                 sc = "exit";
@@ -326,11 +468,21 @@ var CellRenderer = (function (_super) {
             }
             if (sc != "") {
                 this.contents.loadTexture("sprites", sc);
-                this.contents.visible = true;
             }
             else {
                 this.contents.visible = false;
             }
+        }
+    };
+    CellRenderer.prototype.setWall = function (dir, isOn) {
+        if (this.floor.visible) {
+            isOn = true;
+        }
+        if (dir == Direction.RIGHT && this.rightWall != null) {
+            this.rightWall.visible = isOn;
+        }
+        if (dir == Direction.DOWN && this.downWall != null) {
+            this.downWall.visible = isOn;
         }
     };
     return CellRenderer;
@@ -454,6 +606,9 @@ var BaseLevel = (function () {
         return this.height;
     };
     BaseLevel.prototype.getCell = function (pos) {
+        if (pos.x < 0 || pos.y < 0 || pos.x >= this.width || pos.y >= this.height) {
+            return null;
+        }
         return this.cells[pos.x][pos.y];
     };
     BaseLevel.prototype.setCell = function (pos, item) {
@@ -466,7 +621,18 @@ var BaseLevel = (function () {
         if (pos.y == 0 && dir == Direction.UP) {
             return false;
         }
-        console.log("TODO:CANMOVE NOT IMPLEMENTED");
+        if (dir == Direction.LEFT) {
+            return !(this.cells[pos.x - 1][pos.y].wallRight);
+        }
+        if (dir == Direction.RIGHT) {
+            return !(this.cells[pos.x][pos.y].wallRight);
+        }
+        if (dir == Direction.UP) {
+            return !(this.cells[pos.x][pos.y - 1].wallDown);
+        }
+        if (dir == Direction.DOWN) {
+            return !(this.cells[pos.x][pos.y].wallDown);
+        }
         return false;
     };
     return BaseLevel;
@@ -581,26 +747,37 @@ var Renderer = (function (_super) {
                 cr.x = x * cellSize;
                 cr.y = y * cellSize;
                 _this.cellRenderers[x][y] = cr;
-                _this.updateCell(p);
                 _this.add(cr);
             }
         }
         return _this;
     }
     Renderer.prototype.updateCell = function (pos) {
-        this.cellRenderers[pos.x][pos.y].updateCell(this.level.getCell(pos));
+        this.cellRenderers[pos.x][pos.y].updateCellContents(this.level.getCell(pos));
+        var isOn = this.level.getCell(pos).visibility != Visibility.HIDDEN;
+        if (pos.x > 0) {
+            var p1 = new Pos(pos.x - 1, pos.y);
+            if (this.level.getCell(p1).wallRight) {
+                this.cellRenderers[p1.x][p1.y].setWall(Direction.RIGHT, isOn);
+            }
+        }
+        if (pos.y > 0) {
+            var p1 = new Pos(pos.x, pos.y - 1);
+            if (this.level.getCell(p1).wallDown) {
+                this.cellRenderers[p1.x][p1.y].setWall(Direction.DOWN, isOn);
+            }
+        }
     };
-    Renderer.prototype.positionObject = function (obj, pos) {
+    Renderer.prototype.positionObject = function (obj, cellPos) {
         this.add(obj);
-        obj.bringToTop();
         obj.anchor.setTo(0.5, 0.5);
-        obj.x = (pos.x + 0.5) * this.cellSize;
-        obj.y = (pos.y + 0.5) * this.cellSize;
         obj.width = obj.height = this.cellSize * 3 / 4;
+        obj.x = (cellPos.x + 0.5) * this.cellSize;
+        obj.y = (cellPos.y + 0.5) * this.cellSize;
     };
-    Renderer.prototype.moveObjectTo = function (obj, pos) {
-        var x1 = (pos.x + 0.5) * this.cellSize;
-        var y1 = (pos.y + 0.5) * this.cellSize;
+    Renderer.prototype.moveObjectTo = function (obj, cellPos) {
+        var x1 = (cellPos.x + 0.5) * this.cellSize;
+        var y1 = (cellPos.y + 0.5) * this.cellSize;
         this.game.add.tween(obj).to({ x: x1, y: y1 }, (Math.abs(x1 - obj.x) + Math.abs(y1 - obj.y)) * 2, Phaser.Easing.Default, true);
     };
     Renderer.prototype.destroy = function () {

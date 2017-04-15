@@ -37,11 +37,12 @@ class PreloadState extends Phaser.State {
             this.game.load.audio(audioName,["assets/sounds/"+audioName+".mp3",
                                             "assets/sounds/"+audioName+".ogg"]);
         }
-        var info:any = { "difficulty":1.0, "size": 10, "levels": 4, "level":4 };
+
+        var gameInfo:GameData = new GameData();
 
         // Switch to game state when load complete.        
         this.game.load.onLoadComplete.add(() => { 
-                this.game.state.start("Start",true,false,info); },
+                this.game.state.start("Start",true,false,gameInfo); },
                 this);
     }
 }
