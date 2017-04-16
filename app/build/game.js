@@ -32,6 +32,7 @@ var GameState = (function (_super) {
         this.mazeRenderer = null;
         this.monsterList = [];
         this.moveToLevel(this.gameInfo.currentLevel);
+        this.addMonster(new Pos(this.player.cellPos.x + 1, this.player.cellPos.y), true);
     };
     GameState.prototype.clickHandler = function (object, pointer) {
         this.game.tweens.removeFrom(this.playerSprite);
@@ -95,7 +96,19 @@ var GameState = (function (_super) {
     };
     GameState.prototype.actionCell = function (pos) {
         console.log("Action ", pos.x, pos.y);
-        this.player.isDwarfAlive = false;
+    };
+    GameState.prototype.addMonster = function (pos, hasTreasure) {
+        var m = new Monster(this.game, pos, this.gameInfo.currentLevel);
+        this.mazeRenderer.add(m.getSprite());
+        this.game.world.bringToTop(m);
+        this.monsterList.push(m);
+        this.gameInfo.maze.getLevel(this.gameInfo.currentLevel).getCell(pos).contents =
+            (hasTreasure ? CellContents.TREASURE : CellContents.NOTHING);
+        this.mazeRenderer.updateCell(pos);
+        this.mazeRenderer.positionObject(m.getSprite(), m.cellPos);
+        this.textScroller.write("You've come upon");
+        this.textScroller.write(m.count + " " + m.name);
+        this.textScroller.write("Their strength is " + m.strength);
     };
     GameState.prototype.moveToLevel = function (newLevel) {
         if (this.mazeRenderer != null) {
@@ -183,16 +196,29 @@ var StartState = (function (_super) {
     };
     return StartState;
 }(Phaser.State));
-var Monster = (function (_super) {
-    __extends(Monster, _super);
-    function Monster(game) {
-        return _super.call(this, game) || this;
+var Monster = (function () {
+    function Monster(game, pos, level) {
+        this.cellPos = pos;
+        this.name = Monster.MONSTERS[Math.floor(Math.random() * Monster.MONSTERS.length)];
+        this.sprite = game.add.sprite(0, 0, "sprites", this.name.replace(" ", ""));
+        this.strength = 15 + Math.floor(10 * Math.random()) + (1 + level * 20);
+        this.count = Math.floor(19 * Math.random()) + 5;
     }
     Monster.prototype.destroy = function () {
-        _super.prototype.destroy.call(this);
+        this.sprite.destroy();
+        this.sprite = null;
+    };
+    Monster.prototype.getSprite = function () {
+        return this.sprite;
     };
     return Monster;
-}(Phaser.Group));
+}());
+Monster.MONSTERS = [
+    "lycanthropes", "gargoyles", "balrogs", "vampires", "goblins", "mighty ogres",
+    "vicious orcs", "cyclopses", "skeletons", "zombies", "evil trolls", "mummies",
+    "huge spiders", "werewolves", "minotaurs", "centaurs", "berserkers", "griffons",
+    "basilisks", "gorgons"
+];
 var Player = (function () {
     function Player(maze) {
         this.strength = 1;
@@ -750,8 +776,26 @@ var Renderer = (function (_super) {
                 _this.add(cr);
             }
         }
+        for (var x = -1; x <= level.getWidth(); x++) {
+            _this.addFrame(x, -1);
+            _this.addFrame(x, level.getHeight());
+        }
+        for (var y = 0; y < level.getHeight(); y++) {
+            _this.addFrame(-1, y);
+            _this.addFrame(level.getWidth(), y);
+        }
+        for (var x = level.getWidth() - 1; x >= 0; x--) {
+            for (var y = level.getHeight() - 1; y >= 0; y--) {
+                _this.updateCell(new Pos(x, y));
+                ;
+            }
+        }
         return _this;
     }
+    Renderer.prototype.addFrame = function (x, y) {
+        var frame = this.game.add.image(x * this.cellSize, y * this.cellSize, "sprites", "frame", this);
+        frame.width = frame.height = this.cellSize;
+    };
     Renderer.prototype.updateCell = function (pos) {
         this.cellRenderers[pos.x][pos.y].updateCellContents(this.level.getCell(pos));
         var isOn = this.level.getCell(pos).visibility != Visibility.HIDDEN;

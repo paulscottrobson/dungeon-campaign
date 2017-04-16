@@ -13,7 +13,7 @@ class Renderer extends Phaser.Group {
         for (var x = level.getWidth()-1; x >= 0;x--) {
             this.cellRenderers[x] = [];
             for (var y = level.getHeight()-1;y >= 0;y--) {
-                var p:Pos = new Pos(x,y);
+                var p:Pos = new Pos(x,y);                
                 var cr:CellRenderer = new CellRenderer(this.game,
                                             this.level.getCell(p),cellSize,this);
                 cr.x = x * cellSize;cr.y = y * cellSize;
@@ -21,6 +21,28 @@ class Renderer extends Phaser.Group {
                 this.add(cr);
             }
         }
+        for (var x = -1;x <= level.getWidth();x++) {
+            this.addFrame(x,-1);
+            this.addFrame(x,level.getHeight());
+        }
+        for (var y = 0;y < level.getHeight();y++) {
+            this.addFrame(-1,y);
+            this.addFrame(level.getWidth(),y);
+        }
+
+        for (var x = level.getWidth()-1; x >= 0;x--) {
+            for (var y = level.getHeight()-1;y >= 0;y--) {
+                // This opens up the whole maze at the start.
+                //level.getCell(new Pos(x,y)).visibility = Visibility.PERMANENT;
+                this.updateCell(new Pos(x,y));;
+            }
+        }
+    }
+
+    addFrame(x:number,y:number): void {
+        var frame:Phaser.Image = this.game.add.image(x*this.cellSize,y*this.cellSize,
+                                                     "sprites","frame",this);
+        frame.width = frame.height = this.cellSize;                                                     
     }
 
     updateCell(pos:Pos) :void  {

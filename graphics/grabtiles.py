@@ -17,22 +17,27 @@ tiles = """
 	exit		498 495
 	gold 		563 686
 	carpet 		1909 1425
-	lycanthrope	750 180
-	gargoyle	790 176
-	balrog		496 175
-	vampire		402 274
-	goblin		114 78
-	ogre		48 80
-	cyclops		787 305
-	skeleton	880 174
-	zombie		1905 241
-	troll		973 209
-	mummy		690 209
-	spider		272 141
-	werewolf	782 146
-	minotaur	1970 175
-	centaur		590 208
-	berserker	1330 80
+	lycanthropes 750 180
+	viciousorcs 431 313
+	gargoyles	790 176
+	balrogs		496 175
+	vampires	402 274
+	goblins		114 78
+	mightyogres	48 80
+	cyclopses	787 305
+	skeletons	880 174
+	zombies		1905 241
+	eviltrolls	973 209
+	mummies		690 209
+	hugespiders	272 141
+	werewolves	782 146
+	minotaurs	1970 175
+	centaurs	590 208
+	berserkers	1330 80
+	griffons	1744 300
+	basilisks	1646 272
+	gorgons		1680 270
+	frame 		1843 496
 
 """.replace("\t"," ").split("\n")
 

@@ -1,6 +1,5 @@
 
-Frame around game.
-Movement to monster reveals and instantiates monster and treasure  but is not immediate attack.
+Movement reveals monster.
 Movement to pit causes fall down, level changing code.
 Necromancer / Pterodactyl on landing on 
 Treasure on landing on. (not if monster present)

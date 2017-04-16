@@ -36,6 +36,7 @@ class GameState extends Phaser.State {
         this.mazeRenderer = null;
         this.monsterList = [];
         this.moveToLevel(this.gameInfo.currentLevel);
+        this.addMonster(new Pos(this.player.cellPos.x+1,this.player.cellPos.y),true);
     }
 
     /**
@@ -145,8 +146,23 @@ class GameState extends Phaser.State {
      */
     actionCell(pos:Pos) : void {
         console.log("Action ",pos.x,pos.y);
-        this.player.isDwarfAlive = false;
     }
+
+
+    addMonster(pos:Pos,hasTreasure:boolean) {
+        var m:Monster = new Monster(this.game,pos,this.gameInfo.currentLevel);
+        this.mazeRenderer.add(m.getSprite());
+        this.game.world.bringToTop(m);
+        this.monsterList.push(m);
+        this.gameInfo.maze.getLevel(this.gameInfo.currentLevel).getCell(pos).contents = 
+                                (hasTreasure ? CellContents.TREASURE:CellContents.NOTHING);
+        this.mazeRenderer.updateCell(pos);                                
+        this.mazeRenderer.positionObject(m.getSprite(), m.cellPos);
+        this.textScroller.write("You've come upon");
+        this.textScroller.write(m.count+" "+m.name);
+        this.textScroller.write("Their strength is "+m.strength);
+    }
+
     /**
      * Move to a new level.
      * 
