@@ -33,7 +33,7 @@ class Renderer extends Phaser.Group {
         for (var x = level.getWidth()-1; x >= 0;x--) {
             for (var y = level.getHeight()-1;y >= 0;y--) {
                 // This opens up the whole maze at the start.
-                //level.getCell(new Pos(x,y)).visibility = Visibility.PERMANENT;
+                level.getCell(new Pos(x,y)).visibility = Visibility.PERMANENT;
                 this.updateCell(new Pos(x,y));;
             }
         }

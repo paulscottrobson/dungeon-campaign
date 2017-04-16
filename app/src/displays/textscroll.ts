@@ -14,6 +14,7 @@ class TextScroller extends Phaser.Group {
     private toWrite:string;
     private xCursor:number = 0;
     private speedMod:number = 0;
+    private queue:string[];
 
     /**
      * Creates an instance of TextScroller.
@@ -28,13 +29,14 @@ class TextScroller extends Phaser.Group {
         var scr:Phaser.Image = game.add.image(0,0,"sprites","scroll",this);
         scr.width = width;scr.height = height;        
         this.lines = [];
+        this.queue = [];
         for (var n:number = 0;n < TextScroller.LINES;n++) {
             this.lines[n] = game.add.bitmapText(width * 0.14,(n+1)*height / (TextScroller.LINES+1),
                                                 "font","",22,this);
             this.lines[n].tint = 0x000000;                                                
             this.lines[n].anchor.setTo(0,0.5);
         }
-        this.xCursor = 0;this.yCursor = -1;
+        this.xCursor = 0;this.yCursor = 0;
         this.toWrite = "";
     }
 
@@ -46,10 +48,10 @@ class TextScroller extends Phaser.Group {
      * @memberOf TextScroller
      */
     write(s:string) : void {
-        // Complete any pending write.
-        if (this.xCursor < this.toWrite.length) {
-            this.lines[this.yCursor].text = this.toWrite;
-        }
+        this.queue.push(s);;
+    }
+
+    nextLine() : void {
         this.yCursor++;
         // If at bottom, scroll up to make space.
         if (this.yCursor == TextScroller.LINES) {
@@ -58,10 +60,9 @@ class TextScroller extends Phaser.Group {
             }
             this.yCursor = TextScroller.LINES-1;
         }
-        // Start the next one, characters changed in update()
-        this.lines[this.yCursor].text = "";
+        this.toWrite = "";        
         this.xCursor = 0;
-        this.toWrite = s;
+        this.lines[this.yCursor].text = "";
     }
     
     /**
@@ -75,6 +76,12 @@ class TextScroller extends Phaser.Group {
         if (this.speedMod % 4 == 0 && this.xCursor < this.toWrite.length) {
             this.xCursor++;
             this.lines[this.yCursor].text = this.toWrite.slice(0,this.xCursor);
+            if (this.xCursor == this.toWrite.length) {
+                this.nextLine();
+            }
+        }
+        if (this.xCursor == 0 && this.toWrite == "" && this.queue.length > 0) {
+            this.toWrite = this.queue.shift();
         }
     }
 

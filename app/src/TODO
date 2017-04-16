@@ -1,9 +1,10 @@
 
 Movement reveals monster.
+Treasure on landing on  (not if monster present)
 Movement to pit causes fall down, level changing code.
-Necromancer / Pterodactyl on landing on 
-Treasure on landing on. (not if monster present)
-Action Button , code for treasure, stairs
+Necromancer / Pterodactyl on landing on, go elsewhere.
+Use of stairs and exit.
+
 Gas effects
 Battling.
 Generalised bad guys.

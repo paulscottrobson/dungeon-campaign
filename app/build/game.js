@@ -127,6 +127,7 @@ var GameState = (function (_super) {
         this.gameInfo.currentLevel = newLevel;
         this.game.world.bringToTop(this.textScroller);
         this.game.world.bringToTop(this.playerSprite);
+        this.game.world.bringToTop(this.statusArea);
         this.textScroller.write("Entering level " + (newLevel + 1));
         this.warningMessages();
     };
@@ -366,20 +367,22 @@ var TextScroller = (function (_super) {
         scr.width = width;
         scr.height = height;
         _this.lines = [];
+        _this.queue = [];
         for (var n = 0; n < TextScroller.LINES; n++) {
             _this.lines[n] = game.add.bitmapText(width * 0.14, (n + 1) * height / (TextScroller.LINES + 1), "font", "", 22, _this);
             _this.lines[n].tint = 0x000000;
             _this.lines[n].anchor.setTo(0, 0.5);
         }
         _this.xCursor = 0;
-        _this.yCursor = -1;
+        _this.yCursor = 0;
         _this.toWrite = "";
         return _this;
     }
     TextScroller.prototype.write = function (s) {
-        if (this.xCursor < this.toWrite.length) {
-            this.lines[this.yCursor].text = this.toWrite;
-        }
+        this.queue.push(s);
+        ;
+    };
+    TextScroller.prototype.nextLine = function () {
         this.yCursor++;
         if (this.yCursor == TextScroller.LINES) {
             for (var i = 0; i < TextScroller.LINES - 1; i++) {
@@ -387,15 +390,21 @@ var TextScroller = (function (_super) {
             }
             this.yCursor = TextScroller.LINES - 1;
         }
-        this.lines[this.yCursor].text = "";
+        this.toWrite = "";
         this.xCursor = 0;
-        this.toWrite = s;
+        this.lines[this.yCursor].text = "";
     };
     TextScroller.prototype.update = function () {
         this.speedMod++;
         if (this.speedMod % 4 == 0 && this.xCursor < this.toWrite.length) {
             this.xCursor++;
             this.lines[this.yCursor].text = this.toWrite.slice(0, this.xCursor);
+            if (this.xCursor == this.toWrite.length) {
+                this.nextLine();
+            }
+        }
+        if (this.xCursor == 0 && this.toWrite == "" && this.queue.length > 0) {
+            this.toWrite = this.queue.shift();
         }
     };
     TextScroller.prototype.destroy = function () {
@@ -786,6 +795,7 @@ var Renderer = (function (_super) {
         }
         for (var x = level.getWidth() - 1; x >= 0; x--) {
             for (var y = level.getHeight() - 1; y >= 0; y--) {
+                level.getCell(new Pos(x, y)).visibility = Visibility.PERMANENT;
                 _this.updateCell(new Pos(x, y));
                 ;
             }

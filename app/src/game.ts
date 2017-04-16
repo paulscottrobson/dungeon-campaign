@@ -193,6 +193,8 @@ class GameState extends Phaser.State {
         // Bring scroller, player above renderer.
         this.game.world.bringToTop(this.textScroller);
         this.game.world.bringToTop(this.playerSprite);
+        this.game.world.bringToTop(this.statusArea);
+        
         this.textScroller.write("Entering level "+(newLevel+1));
         // Announce warning messages
         this.warningMessages();
