@@ -46,7 +46,7 @@ class GameData {
 
     constructor() {
         this.difficulty = 1.0;
-        this.size = 10;
+        this.size = 8;
         this.levels = 4;
     }
 }

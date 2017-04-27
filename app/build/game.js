@@ -32,7 +32,8 @@ var GameState = (function (_super) {
         this.mazeRenderer = null;
         this.monsterList = [];
         this.moveToLevel(this.gameInfo.currentLevel);
-        this.addMonster(new Pos(this.player.cellPos.x + 1, this.player.cellPos.y), true);
+        var m = new TestLevelRenderer(this.game, this.gameInfo.maze.getLevel(0), 200, 200);
+        m.x = m.y = 10;
     };
     GameState.prototype.clickHandler = function (object, pointer) {
         this.game.tweens.removeFrom(this.playerSprite);
@@ -82,6 +83,7 @@ var GameState = (function (_super) {
                 if (this.player.isDwarfAlive) {
                     this.lightSquare(this.gameInfo.currentLevel, this.player.cellPos);
                 }
+                console.log(level.getCell(this.player.cellPos).contents);
             }
         }
         var cellContents = level.getCell(this.player.cellPos).contents;
@@ -174,7 +176,7 @@ GameState.TILESIZE = 96;
 var GameData = (function () {
     function GameData() {
         this.difficulty = 1.0;
-        this.size = 10;
+        this.size = 8;
         this.levels = 4;
     }
     return GameData;
@@ -878,7 +880,7 @@ var TestLevelRenderer = (function (_super) {
                         s = "stairsd";
                     }
                     if (cell.contents == CellContents.NECROMANCER) {
-                        s = "balrog";
+                        s = "balrogs";
                     }
                     if (cell.contents == CellContents.MONSTERTREASURE || cell.contents == CellContents.MONSTER)
                         s = "dragon";

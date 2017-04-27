@@ -27,7 +27,7 @@ class TestLevelRenderer extends Phaser.Group {
                     if (cell.contents == CellContents.PIT) { s = "pit"; }
                     if (cell.contents == CellContents.STAIRSUP) { s = "stairsu"; }
                     if (cell.contents == CellContents.STAIRSDOWN) { s = "stairsd"; }
-                    if (cell.contents == CellContents.NECROMANCER) { s = "balrog"; }
+                    if (cell.contents == CellContents.NECROMANCER) { s = "balrogs"; }
                     if (cell.contents == CellContents.MONSTERTREASURE || cell.contents == CellContents.MONSTER) s = "dragon";
                     if (s != "") {
                         var cont:Phaser.Image = game.add.image(x+w/2,y+h/2,"sprites",s,this);

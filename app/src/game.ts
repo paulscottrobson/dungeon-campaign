@@ -36,7 +36,12 @@ class GameState extends Phaser.State {
         this.mazeRenderer = null;
         this.monsterList = [];
         this.moveToLevel(this.gameInfo.currentLevel);
-        this.addMonster(new Pos(this.player.cellPos.x+1,this.player.cellPos.y),true);
+
+        var m:TestLevelRenderer = new TestLevelRenderer(this.game,
+                                this.gameInfo.maze.getLevel(0),200,200);
+        m.x = m.y = 10;
+        
+        //this.addMonster(new Pos(this.player.cellPos.x+1,this.player.cellPos.y),true);
     }
 
     /**
@@ -120,6 +125,7 @@ class GameState extends Phaser.State {
                     this.lightSquare(this.gameInfo.currentLevel,this.player.cellPos);
                 }
                 // TODO: Instantiate monster and go back one square if found.
+                console.log(level.getCell(this.player.cellPos).contents);
             }
         }
         // Find out what you've landed in.
